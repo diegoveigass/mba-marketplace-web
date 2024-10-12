@@ -7,7 +7,7 @@ export function Dashboard() {
   return (
     <div className="pt-16 px-40 h-full flex gap-10 flex-col">
       <div>
-        <h1 className="text-bold text-2xl text-gray-500 font-dm-sans">
+        <h1 className="font-bold text-3xl text-gray-500 font-dm-sans">
           Últimos 30 dias
         </h1>
         <span className="text-gray-300">
