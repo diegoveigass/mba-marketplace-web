@@ -7,6 +7,6 @@
  */
 
 export interface AuthenticateSellerBody {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }

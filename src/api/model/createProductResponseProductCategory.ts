@@ -7,7 +7,7 @@
  */
 
 export type CreateProductResponseProductCategory = {
-  id: string;
-  slug: string;
-  title: string;
-};
+  id: string
+  slug: string
+  title: string
+}

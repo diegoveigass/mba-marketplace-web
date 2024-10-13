@@ -5,8 +5,8 @@
  * API to manage MBA Marketplace
  * OpenAPI spec version: 1.0
  */
-import type { ViewsPerDayResponseViewsPerDayItem } from './viewsPerDayResponseViewsPerDayItem';
+import type { ViewsPerDayResponseViewsPerDayItem } from './viewsPerDayResponseViewsPerDayItem'
 
 export interface ViewsPerDayResponse {
-  viewsPerDay: ViewsPerDayResponseViewsPerDayItem[];
+  viewsPerDay: ViewsPerDayResponseViewsPerDayItem[]
 }

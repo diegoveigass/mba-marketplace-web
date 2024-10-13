@@ -6,12 +6,12 @@
  * OpenAPI spec version: 1.0
  */
 
-export type ListAllProductsControllerHandleStatus = typeof ListAllProductsControllerHandleStatus[keyof typeof ListAllProductsControllerHandleStatus];
-
+export type ListAllProductsControllerHandleStatus =
+  (typeof ListAllProductsControllerHandleStatus)[keyof typeof ListAllProductsControllerHandleStatus]
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ListAllProductsControllerHandleStatus = {
   available: 'available',
   sold: 'sold',
   cancelled: 'cancelled',
-} as const;
+} as const

@@ -5,13 +5,13 @@
  * API to manage MBA Marketplace
  * OpenAPI spec version: 1.0
  */
-import type { RegisterViewResponseViewerAvatar } from './registerViewResponseViewerAvatar';
+import type { RegisterViewResponseViewerAvatar } from './registerViewResponseViewerAvatar'
 
 export type RegisterViewResponseViewer = {
   /** @nullable */
-  avatar: RegisterViewResponseViewerAvatar;
-  email: string;
-  id: string;
-  name: string;
-  phone: string;
-};
+  avatar: RegisterViewResponseViewerAvatar
+  email: string
+  id: string
+  name: string
+  phone: string
+}

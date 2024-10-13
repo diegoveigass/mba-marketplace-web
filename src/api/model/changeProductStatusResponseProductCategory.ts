@@ -7,7 +7,7 @@
  */
 
 export type ChangeProductStatusResponseProductCategory = {
-  id: string;
-  slug: string;
-  title: string;
-};
+  id: string
+  slug: string
+  title: string
+}

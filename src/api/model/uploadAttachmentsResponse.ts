@@ -5,8 +5,8 @@
  * API to manage MBA Marketplace
  * OpenAPI spec version: 1.0
  */
-import type { UploadAttachmentsResponseAttachmentsItem } from './uploadAttachmentsResponseAttachmentsItem';
+import type { UploadAttachmentsResponseAttachmentsItem } from './uploadAttachmentsResponseAttachmentsItem'
 
 export interface UploadAttachmentsResponse {
-  attachments: UploadAttachmentsResponseAttachmentsItem[];
+  attachments: UploadAttachmentsResponseAttachmentsItem[]
 }

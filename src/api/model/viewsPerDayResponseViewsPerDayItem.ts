@@ -7,6 +7,6 @@
  */
 
 export type ViewsPerDayResponseViewsPerDayItem = {
-  amount: number;
-  date: unknown;
-};
+  amount: number
+  date: unknown
+}

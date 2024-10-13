@@ -10,6 +10,6 @@
  * @nullable
  */
 export type GetProductResponseProductOwnerAvatar = {
-  id: string;
-  url: string;
-} | null;
+  id: string
+  url: string
+} | null

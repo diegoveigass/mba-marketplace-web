@@ -5,10 +5,10 @@
  * API to manage MBA Marketplace
  * OpenAPI spec version: 1.0
  */
-import type { ListAllProductsControllerHandleStatus } from './listAllProductsControllerHandleStatus';
+import type { ListAllProductsControllerHandleStatus } from './listAllProductsControllerHandleStatus'
 
 export type ListAllProductsControllerHandleParams = {
-page?: unknown;
-status?: ListAllProductsControllerHandleStatus;
-search?: unknown;
-};
+  page?: unknown
+  status?: ListAllProductsControllerHandleStatus
+  search?: unknown
+}

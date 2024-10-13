@@ -7,9 +7,9 @@
  */
 
 export interface CreateProductBody {
-  attachmentsIds: string[];
-  categoryId: string;
-  description: string;
-  priceInCents: number;
-  title: string;
+  attachmentsIds: string[]
+  categoryId: string
+  description: string
+  priceInCents: number
+  title: string
 }

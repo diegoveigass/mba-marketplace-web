@@ -22,7 +22,11 @@ export const registerViewControllerHandle = (
   id: unknown,
   options?: AxiosRequestConfig
 ): Promise<AxiosResponse<RegisterViewResponse>> => {
-  return axios.default.post(`/products/${id}/views`, undefined, options)
+  return axios.default.post(
+    `http://localhost:3333/products/${id}/views`,
+    undefined,
+    options
+  )
 }
 
 export const getRegisterViewControllerHandleMutationOptions = <

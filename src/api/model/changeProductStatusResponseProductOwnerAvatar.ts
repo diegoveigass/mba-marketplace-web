@@ -10,6 +10,6 @@
  * @nullable
  */
 export type ChangeProductStatusResponseProductOwnerAvatar = {
-  id: string;
-  url: string;
-} | null;
+  id: string
+  url: string
+} | null

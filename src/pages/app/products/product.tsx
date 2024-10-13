@@ -1,5 +1,4 @@
 import {
-  ArrowLeft01Icon,
   ArrowLeft02Icon,
   ArrowUp01Icon,
   ImageUploadIcon,

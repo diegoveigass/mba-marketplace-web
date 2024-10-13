@@ -10,6 +10,6 @@
  * @nullable
  */
 export type RegisterViewResponseProductOwnerAvatar = {
-  id: string;
-  url: string;
-} | null;
+  id: string
+  url: string
+} | null

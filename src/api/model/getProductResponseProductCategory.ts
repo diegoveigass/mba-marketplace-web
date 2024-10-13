@@ -7,7 +7,7 @@
  */
 
 export type GetProductResponseProductCategory = {
-  id: string;
-  slug: string;
-  title: string;
-};
+  id: string
+  slug: string
+  title: string
+}

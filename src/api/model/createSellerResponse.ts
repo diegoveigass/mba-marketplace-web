@@ -5,8 +5,8 @@
  * API to manage MBA Marketplace
  * OpenAPI spec version: 1.0
  */
-import type { CreateSellerResponseSeller } from './createSellerResponseSeller';
+import type { CreateSellerResponseSeller } from './createSellerResponseSeller'
 
 export interface CreateSellerResponse {
-  seller: CreateSellerResponseSeller;
+  seller: CreateSellerResponseSeller
 }

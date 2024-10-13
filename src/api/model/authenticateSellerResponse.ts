@@ -7,5 +7,5 @@
  */
 
 export interface AuthenticateSellerResponse {
-  accessToken: string;
+  accessToken: string
 }

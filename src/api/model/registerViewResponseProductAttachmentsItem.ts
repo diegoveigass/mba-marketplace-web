@@ -7,6 +7,6 @@
  */
 
 export type RegisterViewResponseProductAttachmentsItem = {
-  id: string;
-  url: string;
-};
+  id: string
+  url: string
+}

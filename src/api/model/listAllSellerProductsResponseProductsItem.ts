@@ -5,16 +5,16 @@
  * API to manage MBA Marketplace
  * OpenAPI spec version: 1.0
  */
-import type { ListAllSellerProductsResponseProductsItemAttachmentsItem } from './listAllSellerProductsResponseProductsItemAttachmentsItem';
-import type { ListAllSellerProductsResponseProductsItemCategory } from './listAllSellerProductsResponseProductsItemCategory';
-import type { ListAllSellerProductsResponseProductsItemOwner } from './listAllSellerProductsResponseProductsItemOwner';
+import type { ListAllSellerProductsResponseProductsItemAttachmentsItem } from './listAllSellerProductsResponseProductsItemAttachmentsItem'
+import type { ListAllSellerProductsResponseProductsItemCategory } from './listAllSellerProductsResponseProductsItemCategory'
+import type { ListAllSellerProductsResponseProductsItemOwner } from './listAllSellerProductsResponseProductsItemOwner'
 
 export type ListAllSellerProductsResponseProductsItem = {
-  attachments: ListAllSellerProductsResponseProductsItemAttachmentsItem[];
-  category: ListAllSellerProductsResponseProductsItemCategory;
-  description: string;
-  id: string;
-  owner: ListAllSellerProductsResponseProductsItemOwner;
-  priceInCents: number;
-  title: string;
-};
+  attachments: ListAllSellerProductsResponseProductsItemAttachmentsItem[]
+  category: ListAllSellerProductsResponseProductsItemCategory
+  description: string
+  id: string
+  owner: ListAllSellerProductsResponseProductsItemOwner
+  priceInCents: number
+  title: string
+}

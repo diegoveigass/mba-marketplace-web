@@ -7,7 +7,7 @@
  */
 
 export type ListAllCategoriesResponseCategoriesItem = {
-  id: string;
-  slug: string;
-  title: string;
-};
+  id: string
+  slug: string
+  title: string
+}

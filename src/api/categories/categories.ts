@@ -7,8 +7,11 @@
  */
 import { useQuery } from '@tanstack/react-query'
 import type {
+  DefinedInitialDataOptions,
+  DefinedUseQueryResult,
   QueryFunction,
   QueryKey,
+  UndefinedInitialDataOptions,
   UseQueryOptions,
   UseQueryResult,
 } from '@tanstack/react-query'
@@ -22,21 +25,23 @@ import type { ListAllCategoriesResponse } from '.././model'
 export const listAllCategoriesControllerHandle = (
   options?: AxiosRequestConfig
 ): Promise<AxiosResponse<ListAllCategoriesResponse>> => {
-  return axios.default.get('/categories', options)
+  return axios.default.get(`http://localhost:3333/categories`, options)
 }
 
 export const getListAllCategoriesControllerHandleQueryKey = () => {
-  return ['/categories'] as const
+  return [`http://localhost:3333/categories`] as const
 }
 
 export const getListAllCategoriesControllerHandleQueryOptions = <
   TData = Awaited<ReturnType<typeof listAllCategoriesControllerHandle>>,
   TError = AxiosError<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof listAllCategoriesControllerHandle>>,
-    TError,
-    TData
+  query?: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof listAllCategoriesControllerHandle>>,
+      TError,
+      TData
+    >
   >
   axios?: AxiosRequestConfig
 }) => {
@@ -62,6 +67,61 @@ export type ListAllCategoriesControllerHandleQueryResult = NonNullable<
 >
 export type ListAllCategoriesControllerHandleQueryError = AxiosError<unknown>
 
+export function useListAllCategoriesControllerHandle<
+  TData = Awaited<ReturnType<typeof listAllCategoriesControllerHandle>>,
+  TError = AxiosError<unknown>,
+>(options: {
+  query: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof listAllCategoriesControllerHandle>>,
+      TError,
+      TData
+    >
+  > &
+    Pick<
+      DefinedInitialDataOptions<
+        Awaited<ReturnType<typeof listAllCategoriesControllerHandle>>,
+        TError,
+        TData
+      >,
+      'initialData'
+    >
+  axios?: AxiosRequestConfig
+}): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useListAllCategoriesControllerHandle<
+  TData = Awaited<ReturnType<typeof listAllCategoriesControllerHandle>>,
+  TError = AxiosError<unknown>,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof listAllCategoriesControllerHandle>>,
+      TError,
+      TData
+    >
+  > &
+    Pick<
+      UndefinedInitialDataOptions<
+        Awaited<ReturnType<typeof listAllCategoriesControllerHandle>>,
+        TError,
+        TData
+      >,
+      'initialData'
+    >
+  axios?: AxiosRequestConfig
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useListAllCategoriesControllerHandle<
+  TData = Awaited<ReturnType<typeof listAllCategoriesControllerHandle>>,
+  TError = AxiosError<unknown>,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof listAllCategoriesControllerHandle>>,
+      TError,
+      TData
+    >
+  >
+  axios?: AxiosRequestConfig
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey }
 /**
  * @summary List all categories
  */
@@ -70,10 +130,12 @@ export function useListAllCategoriesControllerHandle<
   TData = Awaited<ReturnType<typeof listAllCategoriesControllerHandle>>,
   TError = AxiosError<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof listAllCategoriesControllerHandle>>,
-    TError,
-    TData
+  query?: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof listAllCategoriesControllerHandle>>,
+      TError,
+      TData
+    >
   >
   axios?: AxiosRequestConfig
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {

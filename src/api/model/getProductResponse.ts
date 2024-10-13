@@ -5,8 +5,8 @@
  * API to manage MBA Marketplace
  * OpenAPI spec version: 1.0
  */
-import type { GetProductResponseProduct } from './getProductResponseProduct';
+import type { GetProductResponseProduct } from './getProductResponseProduct'
 
 export interface GetProductResponse {
-  product: GetProductResponseProduct;
+  product: GetProductResponseProduct
 }

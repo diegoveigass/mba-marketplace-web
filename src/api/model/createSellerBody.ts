@@ -11,12 +11,12 @@ export interface CreateSellerBody {
    * Created in POST - /attachments
    * @nullable
    */
-  avatarId: string | null;
+  avatarId: string | null
   /** Unique */
-  email: string;
-  name: string;
-  password: string;
-  passwordConfirmation: string;
+  email: string
+  name: string
+  password: string
+  passwordConfirmation: string
   /** Unique */
-  phone: string;
+  phone: string
 }

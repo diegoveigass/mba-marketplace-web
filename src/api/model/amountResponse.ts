@@ -7,5 +7,5 @@
  */
 
 export interface AmountResponse {
-  amount: number;
+  amount: number
 }

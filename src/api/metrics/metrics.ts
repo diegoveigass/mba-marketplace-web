@@ -7,8 +7,11 @@
  */
 import { useQuery } from '@tanstack/react-query'
 import type {
+  DefinedInitialDataOptions,
+  DefinedUseQueryResult,
   QueryFunction,
   QueryKey,
+  UndefinedInitialDataOptions,
   UseQueryOptions,
   UseQueryResult,
 } from '@tanstack/react-query'
@@ -22,21 +25,26 @@ import type { AmountResponse, ViewsPerDayResponse } from '.././model'
 export const countSellerSoldProductsControllerHandle = (
   options?: AxiosRequestConfig
 ): Promise<AxiosResponse<AmountResponse>> => {
-  return axios.default.get('/sellers/metrics/products/sold', options)
+  return axios.default.get(
+    `http://localhost:3333/sellers/metrics/products/sold`,
+    options
+  )
 }
 
 export const getCountSellerSoldProductsControllerHandleQueryKey = () => {
-  return ['/sellers/metrics/products/sold'] as const
+  return [`http://localhost:3333/sellers/metrics/products/sold`] as const
 }
 
 export const getCountSellerSoldProductsControllerHandleQueryOptions = <
   TData = Awaited<ReturnType<typeof countSellerSoldProductsControllerHandle>>,
   TError = AxiosError<void>,
 >(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof countSellerSoldProductsControllerHandle>>,
-    TError,
-    TData
+  query?: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof countSellerSoldProductsControllerHandle>>,
+      TError,
+      TData
+    >
   >
   axios?: AxiosRequestConfig
 }) => {
@@ -63,6 +71,61 @@ export type CountSellerSoldProductsControllerHandleQueryResult = NonNullable<
 >
 export type CountSellerSoldProductsControllerHandleQueryError = AxiosError<void>
 
+export function useCountSellerSoldProductsControllerHandle<
+  TData = Awaited<ReturnType<typeof countSellerSoldProductsControllerHandle>>,
+  TError = AxiosError<void>,
+>(options: {
+  query: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof countSellerSoldProductsControllerHandle>>,
+      TError,
+      TData
+    >
+  > &
+    Pick<
+      DefinedInitialDataOptions<
+        Awaited<ReturnType<typeof countSellerSoldProductsControllerHandle>>,
+        TError,
+        TData
+      >,
+      'initialData'
+    >
+  axios?: AxiosRequestConfig
+}): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useCountSellerSoldProductsControllerHandle<
+  TData = Awaited<ReturnType<typeof countSellerSoldProductsControllerHandle>>,
+  TError = AxiosError<void>,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof countSellerSoldProductsControllerHandle>>,
+      TError,
+      TData
+    >
+  > &
+    Pick<
+      UndefinedInitialDataOptions<
+        Awaited<ReturnType<typeof countSellerSoldProductsControllerHandle>>,
+        TError,
+        TData
+      >,
+      'initialData'
+    >
+  axios?: AxiosRequestConfig
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useCountSellerSoldProductsControllerHandle<
+  TData = Awaited<ReturnType<typeof countSellerSoldProductsControllerHandle>>,
+  TError = AxiosError<void>,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof countSellerSoldProductsControllerHandle>>,
+      TError,
+      TData
+    >
+  >
+  axios?: AxiosRequestConfig
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey }
 /**
  * @summary Count the number of products sold by the seller in 30 days
  */
@@ -71,10 +134,12 @@ export function useCountSellerSoldProductsControllerHandle<
   TData = Awaited<ReturnType<typeof countSellerSoldProductsControllerHandle>>,
   TError = AxiosError<void>,
 >(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof countSellerSoldProductsControllerHandle>>,
-    TError,
-    TData
+  query?: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof countSellerSoldProductsControllerHandle>>,
+      TError,
+      TData
+    >
   >
   axios?: AxiosRequestConfig
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
@@ -96,11 +161,14 @@ export function useCountSellerSoldProductsControllerHandle<
 export const countSellerAvailableProductsControllerHandle = (
   options?: AxiosRequestConfig
 ): Promise<AxiosResponse<AmountResponse>> => {
-  return axios.default.get('/sellers/metrics/products/available', options)
+  return axios.default.get(
+    `http://localhost:3333/sellers/metrics/products/available`,
+    options
+  )
 }
 
 export const getCountSellerAvailableProductsControllerHandleQueryKey = () => {
-  return ['/sellers/metrics/products/available'] as const
+  return [`http://localhost:3333/sellers/metrics/products/available`] as const
 }
 
 export const getCountSellerAvailableProductsControllerHandleQueryOptions = <
@@ -109,10 +177,12 @@ export const getCountSellerAvailableProductsControllerHandleQueryOptions = <
   >,
   TError = AxiosError<void>,
 >(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof countSellerAvailableProductsControllerHandle>>,
-    TError,
-    TData
+  query?: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof countSellerAvailableProductsControllerHandle>>,
+      TError,
+      TData
+    >
   >
   axios?: AxiosRequestConfig
 }) => {
@@ -141,6 +211,71 @@ export type CountSellerAvailableProductsControllerHandleQueryResult =
 export type CountSellerAvailableProductsControllerHandleQueryError =
   AxiosError<void>
 
+export function useCountSellerAvailableProductsControllerHandle<
+  TData = Awaited<
+    ReturnType<typeof countSellerAvailableProductsControllerHandle>
+  >,
+  TError = AxiosError<void>,
+>(options: {
+  query: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof countSellerAvailableProductsControllerHandle>>,
+      TError,
+      TData
+    >
+  > &
+    Pick<
+      DefinedInitialDataOptions<
+        Awaited<
+          ReturnType<typeof countSellerAvailableProductsControllerHandle>
+        >,
+        TError,
+        TData
+      >,
+      'initialData'
+    >
+  axios?: AxiosRequestConfig
+}): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useCountSellerAvailableProductsControllerHandle<
+  TData = Awaited<
+    ReturnType<typeof countSellerAvailableProductsControllerHandle>
+  >,
+  TError = AxiosError<void>,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof countSellerAvailableProductsControllerHandle>>,
+      TError,
+      TData
+    >
+  > &
+    Pick<
+      UndefinedInitialDataOptions<
+        Awaited<
+          ReturnType<typeof countSellerAvailableProductsControllerHandle>
+        >,
+        TError,
+        TData
+      >,
+      'initialData'
+    >
+  axios?: AxiosRequestConfig
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useCountSellerAvailableProductsControllerHandle<
+  TData = Awaited<
+    ReturnType<typeof countSellerAvailableProductsControllerHandle>
+  >,
+  TError = AxiosError<void>,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof countSellerAvailableProductsControllerHandle>>,
+      TError,
+      TData
+    >
+  >
+  axios?: AxiosRequestConfig
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey }
 /**
  * @summary Count the amount of available products in 30 days.
  */
@@ -151,10 +286,12 @@ export function useCountSellerAvailableProductsControllerHandle<
   >,
   TError = AxiosError<void>,
 >(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof countSellerAvailableProductsControllerHandle>>,
-    TError,
-    TData
+  query?: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof countSellerAvailableProductsControllerHandle>>,
+      TError,
+      TData
+    >
   >
   axios?: AxiosRequestConfig
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
@@ -176,21 +313,26 @@ export function useCountSellerAvailableProductsControllerHandle<
 export const countSellerViewsControllerHandle = (
   options?: AxiosRequestConfig
 ): Promise<AxiosResponse<AmountResponse>> => {
-  return axios.default.get('/sellers/metrics/views', options)
+  return axios.default.get(
+    `http://localhost:3333/sellers/metrics/views`,
+    options
+  )
 }
 
 export const getCountSellerViewsControllerHandleQueryKey = () => {
-  return ['/sellers/metrics/views'] as const
+  return [`http://localhost:3333/sellers/metrics/views`] as const
 }
 
 export const getCountSellerViewsControllerHandleQueryOptions = <
   TData = Awaited<ReturnType<typeof countSellerViewsControllerHandle>>,
   TError = AxiosError<void>,
 >(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof countSellerViewsControllerHandle>>,
-    TError,
-    TData
+  query?: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof countSellerViewsControllerHandle>>,
+      TError,
+      TData
+    >
   >
   axios?: AxiosRequestConfig
 }) => {
@@ -216,6 +358,61 @@ export type CountSellerViewsControllerHandleQueryResult = NonNullable<
 >
 export type CountSellerViewsControllerHandleQueryError = AxiosError<void>
 
+export function useCountSellerViewsControllerHandle<
+  TData = Awaited<ReturnType<typeof countSellerViewsControllerHandle>>,
+  TError = AxiosError<void>,
+>(options: {
+  query: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof countSellerViewsControllerHandle>>,
+      TError,
+      TData
+    >
+  > &
+    Pick<
+      DefinedInitialDataOptions<
+        Awaited<ReturnType<typeof countSellerViewsControllerHandle>>,
+        TError,
+        TData
+      >,
+      'initialData'
+    >
+  axios?: AxiosRequestConfig
+}): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useCountSellerViewsControllerHandle<
+  TData = Awaited<ReturnType<typeof countSellerViewsControllerHandle>>,
+  TError = AxiosError<void>,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof countSellerViewsControllerHandle>>,
+      TError,
+      TData
+    >
+  > &
+    Pick<
+      UndefinedInitialDataOptions<
+        Awaited<ReturnType<typeof countSellerViewsControllerHandle>>,
+        TError,
+        TData
+      >,
+      'initialData'
+    >
+  axios?: AxiosRequestConfig
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useCountSellerViewsControllerHandle<
+  TData = Awaited<ReturnType<typeof countSellerViewsControllerHandle>>,
+  TError = AxiosError<void>,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof countSellerViewsControllerHandle>>,
+      TError,
+      TData
+    >
+  >
+  axios?: AxiosRequestConfig
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey }
 /**
  * @summary Count the number of views received by the seller in 30 days
  */
@@ -224,10 +421,12 @@ export function useCountSellerViewsControllerHandle<
   TData = Awaited<ReturnType<typeof countSellerViewsControllerHandle>>,
   TError = AxiosError<void>,
 >(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof countSellerViewsControllerHandle>>,
-    TError,
-    TData
+  query?: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof countSellerViewsControllerHandle>>,
+      TError,
+      TData
+    >
   >
   axios?: AxiosRequestConfig
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
@@ -248,21 +447,26 @@ export function useCountSellerViewsControllerHandle<
 export const countSellerViewsPerDayControllerHandle = (
   options?: AxiosRequestConfig
 ): Promise<AxiosResponse<ViewsPerDayResponse>> => {
-  return axios.default.get('/sellers/metrics/views/days', options)
+  return axios.default.get(
+    `http://localhost:3333/sellers/metrics/views/days`,
+    options
+  )
 }
 
 export const getCountSellerViewsPerDayControllerHandleQueryKey = () => {
-  return ['/sellers/metrics/views/days'] as const
+  return [`http://localhost:3333/sellers/metrics/views/days`] as const
 }
 
 export const getCountSellerViewsPerDayControllerHandleQueryOptions = <
   TData = Awaited<ReturnType<typeof countSellerViewsPerDayControllerHandle>>,
   TError = AxiosError<void>,
 >(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof countSellerViewsPerDayControllerHandle>>,
-    TError,
-    TData
+  query?: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof countSellerViewsPerDayControllerHandle>>,
+      TError,
+      TData
+    >
   >
   axios?: AxiosRequestConfig
 }) => {
@@ -289,6 +493,61 @@ export type CountSellerViewsPerDayControllerHandleQueryResult = NonNullable<
 >
 export type CountSellerViewsPerDayControllerHandleQueryError = AxiosError<void>
 
+export function useCountSellerViewsPerDayControllerHandle<
+  TData = Awaited<ReturnType<typeof countSellerViewsPerDayControllerHandle>>,
+  TError = AxiosError<void>,
+>(options: {
+  query: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof countSellerViewsPerDayControllerHandle>>,
+      TError,
+      TData
+    >
+  > &
+    Pick<
+      DefinedInitialDataOptions<
+        Awaited<ReturnType<typeof countSellerViewsPerDayControllerHandle>>,
+        TError,
+        TData
+      >,
+      'initialData'
+    >
+  axios?: AxiosRequestConfig
+}): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useCountSellerViewsPerDayControllerHandle<
+  TData = Awaited<ReturnType<typeof countSellerViewsPerDayControllerHandle>>,
+  TError = AxiosError<void>,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof countSellerViewsPerDayControllerHandle>>,
+      TError,
+      TData
+    >
+  > &
+    Pick<
+      UndefinedInitialDataOptions<
+        Awaited<ReturnType<typeof countSellerViewsPerDayControllerHandle>>,
+        TError,
+        TData
+      >,
+      'initialData'
+    >
+  axios?: AxiosRequestConfig
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey }
+export function useCountSellerViewsPerDayControllerHandle<
+  TData = Awaited<ReturnType<typeof countSellerViewsPerDayControllerHandle>>,
+  TError = AxiosError<void>,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof countSellerViewsPerDayControllerHandle>>,
+      TError,
+      TData
+    >
+  >
+  axios?: AxiosRequestConfig
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey }
 /**
  * @summary Count the number of views per day received by the seller in 30 days
  */
@@ -297,10 +556,12 @@ export function useCountSellerViewsPerDayControllerHandle<
   TData = Awaited<ReturnType<typeof countSellerViewsPerDayControllerHandle>>,
   TError = AxiosError<void>,
 >(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof countSellerViewsPerDayControllerHandle>>,
-    TError,
-    TData
+  query?: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof countSellerViewsPerDayControllerHandle>>,
+      TError,
+      TData
+    >
   >
   axios?: AxiosRequestConfig
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {

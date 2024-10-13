@@ -7,6 +7,6 @@
  */
 
 export type UploadAttachmentsResponseAttachmentsItem = {
-  id: string;
-  url: string;
-};
+  id: string
+  url: string
+}

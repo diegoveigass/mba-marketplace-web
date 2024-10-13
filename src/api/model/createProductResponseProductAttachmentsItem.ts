@@ -7,6 +7,6 @@
  */
 
 export type CreateProductResponseProductAttachmentsItem = {
-  id: string;
-  url: string;
-};
+  id: string
+  url: string
+}

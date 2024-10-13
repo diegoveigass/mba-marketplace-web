@@ -5,16 +5,16 @@
  * API to manage MBA Marketplace
  * OpenAPI spec version: 1.0
  */
-import type { RegisterViewResponseProductAttachmentsItem } from './registerViewResponseProductAttachmentsItem';
-import type { RegisterViewResponseProductCategory } from './registerViewResponseProductCategory';
-import type { RegisterViewResponseProductOwner } from './registerViewResponseProductOwner';
+import type { RegisterViewResponseProductAttachmentsItem } from './registerViewResponseProductAttachmentsItem'
+import type { RegisterViewResponseProductCategory } from './registerViewResponseProductCategory'
+import type { RegisterViewResponseProductOwner } from './registerViewResponseProductOwner'
 
 export type RegisterViewResponseProduct = {
-  attachments: RegisterViewResponseProductAttachmentsItem[];
-  category: RegisterViewResponseProductCategory;
-  description: string;
-  id: string;
-  owner: RegisterViewResponseProductOwner;
-  priceInCents: number;
-  title: string;
-};
+  attachments: RegisterViewResponseProductAttachmentsItem[]
+  category: RegisterViewResponseProductCategory
+  description: string
+  id: string
+  owner: RegisterViewResponseProductOwner
+  priceInCents: number
+  title: string
+}

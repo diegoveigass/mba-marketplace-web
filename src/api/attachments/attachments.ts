@@ -22,9 +22,13 @@ export const uploadAttachmentsControllerHandle = (
   options?: AxiosRequestConfig
 ): Promise<AxiosResponse<UploadAttachmentsResponse>> => {
   const formData = new FormData()
-  formData.append('data')
+  formData.append('data', options?.data)
 
-  return axios.default.post('/attachments', formData, options)
+  return axios.default.post(
+    'http://localhost:3333/attachments',
+    formData,
+    options
+  )
 }
 
 export const getUploadAttachmentsControllerHandleMutationOptions = <

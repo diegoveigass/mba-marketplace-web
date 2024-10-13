@@ -26,7 +26,7 @@ export const authenticateSellerControllerHandle = (
   options?: AxiosRequestConfig
 ): Promise<AxiosResponse<AuthenticateSellerResponse>> => {
   return axios.default.post(
-    '/sellers/sessions',
+    `http://localhost:3333/sellers/sessions`,
     authenticateSellerBody,
     options
   )
@@ -101,7 +101,11 @@ export const useAuthenticateSellerControllerHandle = <
 export const signOutControllerHandle = (
   options?: AxiosRequestConfig
 ): Promise<AxiosResponse<void>> => {
-  return axios.default.post('/sign-out', undefined, options)
+  return axios.default.post(
+    `http://localhost:3333/sign-out`,
+    undefined,
+    options
+  )
 }
 
 export const getSignOutControllerHandleMutationOptions = <
