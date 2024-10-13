@@ -16,7 +16,7 @@ export function Products() {
       <div className="grid grid-cols-3 gap-6">
         <ProductFilter />
 
-        <div className="col-span-2 grid grid-cols-2 gap-4 pb-2">
+        <div className="col-span-2 grid grid-cols-2 gap-4 pb-2 overflow-x-scroll max-h-[675px]">
           <ProductCard />
           <ProductCard />
           <ProductCard />
