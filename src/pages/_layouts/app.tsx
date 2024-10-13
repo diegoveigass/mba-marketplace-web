@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from 'react-router-dom'
+import { Link, NavLink, Outlet } from 'react-router-dom'
 import logoImg from '../../assets/logo.svg'
 import { ChartHistogramIcon, PackageIcon, PlusSignIcon } from 'hugeicons-react'
 
@@ -30,13 +30,13 @@ export function AppLayout() {
         </nav>
 
         <div className="flex items-center justify-center gap-4">
-          <button
-            type="button"
+          <Link
+            to="/products/new"
             className="px-5 py-4 h-10 bg-orange-base rounded-lg text-white flex items-center gap-2 hover:bg-orange-dark transition-colors"
           >
             <PlusSignIcon />
             Novo produto
-          </button>
+          </Link>
 
           <div className="size-12">
             <img
