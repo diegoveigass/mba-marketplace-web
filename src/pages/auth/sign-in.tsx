@@ -5,10 +5,12 @@ import {
   ViewIcon,
 } from 'hugeicons-react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useAuthenticateSellerControllerHandle } from '../../api/sessions/sessions'
+import axios, { type AxiosError } from 'axios'
+import { toast } from 'sonner'
 
 const signInFormSchema = z.object({
   email: z.string().email(),
@@ -18,6 +20,8 @@ const signInFormSchema = z.object({
 type SignInForm = z.infer<typeof signInFormSchema>
 
 export function SignIn() {
+  const navigate = useNavigate()
+
   const { register, handleSubmit } = useForm<SignInForm>({
     resolver: zodResolver(signInFormSchema),
   })
@@ -26,16 +30,26 @@ export function SignIn() {
     useAuthenticateSellerControllerHandle()
 
   async function handleSignIn({ email, password }: SignInForm) {
-    // await authenticateSellerControllerHandle({
-    //   email,
-    //   password,
-    // })
-    await authenticateSeller({
-      data: {
-        password,
-        email,
-      },
-    })
+    try {
+      await authenticateSeller({
+        data: {
+          password,
+          email,
+        },
+      })
+
+      toast.success('Login realizado com sucesso!')
+      navigate('/')
+    } catch (err) {
+      const errors = err as Error | AxiosError
+
+      if (axios.isAxiosError(errors)) {
+        toast.error(errors.response?.data.message)
+        return
+      }
+
+      throw new Error(errors.message)
+    }
   }
 
   return (
@@ -84,7 +98,7 @@ export function SignIn() {
                 <AccessIcon className="text-gray-200 group-focus-within:text-orange-dark" />
                 <input
                   {...register('password')}
-                  type="text"
+                  type="password"
                   id="password"
                   className="w-full outline-none py-4"
                   placeholder="Sua senha de acesso"
@@ -98,7 +112,7 @@ export function SignIn() {
         <button
           disabled={isPending}
           type="submit"
-          className="px-5 py-4 bg-orange-base w-full rounded-lg text-white flex items-center justify-between hover:bg-orange-dark transition-colors"
+          className="px-5 py-4 bg-orange-base w-full rounded-lg text-white flex items-center justify-between hover:bg-orange-dark transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
         >
           Acessar
           <ArrowRight02Icon />
