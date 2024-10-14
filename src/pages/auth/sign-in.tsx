@@ -5,7 +5,7 @@ import {
   ViewIcon,
 } from 'hugeicons-react'
 import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useAuthenticateSellerControllerHandle } from '../../api/sessions/sessions'
@@ -20,10 +20,14 @@ const signInFormSchema = z.object({
 type SignInForm = z.infer<typeof signInFormSchema>
 
 export function SignIn() {
+  const [searchParams] = useSearchParams()
   const navigate = useNavigate()
 
   const { register, handleSubmit } = useForm<SignInForm>({
     resolver: zodResolver(signInFormSchema),
+    defaultValues: {
+      email: searchParams.get('email') ?? '',
+    },
   })
 
   const { mutateAsync: authenticateSeller, isPending } =

@@ -17,10 +17,7 @@ import type { UploadAttachmentsResponse } from '.././model'
 /**
  * @summary Upload attachments
  */
-export const uploadAttachmentsControllerHandle = () => {
-  const formData = new FormData()
-  formData.append('data', '')
-
+export const uploadAttachmentsControllerHandle = (formData: FormData) => {
   return customInstance<UploadAttachmentsResponse>({
     url: `/attachments`,
     method: 'POST',
@@ -36,22 +33,22 @@ export const getUploadAttachmentsControllerHandleMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof uploadAttachmentsControllerHandle>>,
     TError,
-    void,
+    FormData,
     TContext
   >
 }): UseMutationOptions<
   Awaited<ReturnType<typeof uploadAttachmentsControllerHandle>>,
   TError,
-  void,
+  FormData,
   TContext
 > => {
   const { mutation: mutationOptions } = options ?? {}
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof uploadAttachmentsControllerHandle>>,
-    void
-  > = () => {
-    return uploadAttachmentsControllerHandle()
+    FormData
+  > = formData => {
+    return uploadAttachmentsControllerHandle(formData)
   }
 
   return { mutationFn, ...mutationOptions }
@@ -73,13 +70,13 @@ export const useUploadAttachmentsControllerHandle = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof uploadAttachmentsControllerHandle>>,
     TError,
-    void,
+    FormData,
     TContext
   >
 }): UseMutationResult<
   Awaited<ReturnType<typeof uploadAttachmentsControllerHandle>>,
   TError,
-  void,
+  FormData,
   TContext
 > => {
   const mutationOptions =
