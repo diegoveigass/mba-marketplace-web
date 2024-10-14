@@ -1,13 +1,14 @@
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
-import axios, { isAxiosError } from 'axios'
+import { isAxiosError } from 'axios'
 import { Header } from '../../components/header'
+import { AXIOS_INSTANCE as api } from '../../lib/axios-instance'
 
 export function AppLayout() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    const interceptorId = axios.interceptors.response.use(
+    const interceptorId = api.interceptors.response.use(
       response => response,
       error => {
         if (isAxiosError(error)) {
@@ -25,7 +26,7 @@ export function AppLayout() {
     )
 
     return () => {
-      axios.interceptors.response.eject(interceptorId)
+      api.interceptors.response.eject(interceptorId)
     }
   }, [navigate])
 

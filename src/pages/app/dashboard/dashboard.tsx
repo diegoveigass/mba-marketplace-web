@@ -1,10 +1,12 @@
-import { useCountSellerSoldProductsControllerHandle } from '../../../api/metrics/metrics'
+import { useCountSellerViewsPerDayControllerHandle } from '../../../api/metrics/metrics'
 import { Chart } from './chart'
 import { PeopleVisitorsCard } from './people-visitors-card'
 import { ProductAnnouncementCard } from './product-announcement-card'
 import { ProductSellCard } from './product-sell-card'
 
 export function Dashboard() {
+  const { data } = useCountSellerViewsPerDayControllerHandle()
+
   return (
     <div className="pt-16 px-40 h-full flex gap-10 flex-col">
       <div>

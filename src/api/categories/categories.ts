@@ -15,26 +15,27 @@ import type {
   UseQueryOptions,
   UseQueryResult,
 } from '@tanstack/react-query'
-import * as axios from 'axios'
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
+import { customInstance } from '../../lib/axios-instance'
 import type { ListAllCategoriesResponse } from '.././model'
 
 /**
  * @summary List all categories
  */
-export const listAllCategoriesControllerHandle = (
-  options?: AxiosRequestConfig
-): Promise<AxiosResponse<ListAllCategoriesResponse>> => {
-  return axios.default.get(`http://localhost:3333/categories`, options)
+export const listAllCategoriesControllerHandle = (signal?: AbortSignal) => {
+  return customInstance<ListAllCategoriesResponse>({
+    url: `/categories`,
+    method: 'GET',
+    signal,
+  })
 }
 
 export const getListAllCategoriesControllerHandleQueryKey = () => {
-  return [`http://localhost:3333/categories`] as const
+  return [`/categories`] as const
 }
 
 export const getListAllCategoriesControllerHandleQueryOptions = <
   TData = Awaited<ReturnType<typeof listAllCategoriesControllerHandle>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseQueryOptions<
@@ -43,17 +44,15 @@ export const getListAllCategoriesControllerHandleQueryOptions = <
       TData
     >
   >
-  axios?: AxiosRequestConfig
 }) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {}
+  const { query: queryOptions } = options ?? {}
 
   const queryKey =
     queryOptions?.queryKey ?? getListAllCategoriesControllerHandleQueryKey()
 
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof listAllCategoriesControllerHandle>>
-  > = ({ signal }) =>
-    listAllCategoriesControllerHandle({ signal, ...axiosOptions })
+  > = ({ signal }) => listAllCategoriesControllerHandle(signal)
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof listAllCategoriesControllerHandle>>,
@@ -65,11 +64,11 @@ export const getListAllCategoriesControllerHandleQueryOptions = <
 export type ListAllCategoriesControllerHandleQueryResult = NonNullable<
   Awaited<ReturnType<typeof listAllCategoriesControllerHandle>>
 >
-export type ListAllCategoriesControllerHandleQueryError = AxiosError<unknown>
+export type ListAllCategoriesControllerHandleQueryError = unknown
 
 export function useListAllCategoriesControllerHandle<
   TData = Awaited<ReturnType<typeof listAllCategoriesControllerHandle>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options: {
   query: Partial<
     UseQueryOptions<
@@ -86,11 +85,10 @@ export function useListAllCategoriesControllerHandle<
       >,
       'initialData'
     >
-  axios?: AxiosRequestConfig
 }): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey }
 export function useListAllCategoriesControllerHandle<
   TData = Awaited<ReturnType<typeof listAllCategoriesControllerHandle>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseQueryOptions<
@@ -107,11 +105,10 @@ export function useListAllCategoriesControllerHandle<
       >,
       'initialData'
     >
-  axios?: AxiosRequestConfig
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey }
 export function useListAllCategoriesControllerHandle<
   TData = Awaited<ReturnType<typeof listAllCategoriesControllerHandle>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseQueryOptions<
@@ -120,7 +117,6 @@ export function useListAllCategoriesControllerHandle<
       TData
     >
   >
-  axios?: AxiosRequestConfig
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey }
 /**
  * @summary List all categories
@@ -128,7 +124,7 @@ export function useListAllCategoriesControllerHandle<
 
 export function useListAllCategoriesControllerHandle<
   TData = Awaited<ReturnType<typeof listAllCategoriesControllerHandle>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseQueryOptions<
@@ -137,7 +133,6 @@ export function useListAllCategoriesControllerHandle<
       TData
     >
   >
-  axios?: AxiosRequestConfig
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getListAllCategoriesControllerHandleQueryOptions(options)
 

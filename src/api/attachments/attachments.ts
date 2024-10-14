@@ -11,28 +11,26 @@ import type {
   UseMutationOptions,
   UseMutationResult,
 } from '@tanstack/react-query'
-import * as axios from 'axios'
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
+import { customInstance } from '../../lib/axios-instance'
 import type { UploadAttachmentsResponse } from '.././model'
 
 /**
  * @summary Upload attachments
  */
-export const uploadAttachmentsControllerHandle = (
-  options?: AxiosRequestConfig
-): Promise<AxiosResponse<UploadAttachmentsResponse>> => {
+export const uploadAttachmentsControllerHandle = () => {
   const formData = new FormData()
-  formData.append('data', options?.data)
+  formData.append('data', '')
 
-  return axios.default.post(
-    'http://localhost:3333/attachments',
-    formData,
-    options
-  )
+  return customInstance<UploadAttachmentsResponse>({
+    url: `/attachments`,
+    method: 'POST',
+    headers: { 'Content-Type': 'multipart/form-data' },
+    data: formData,
+  })
 }
 
 export const getUploadAttachmentsControllerHandleMutationOptions = <
-  TError = AxiosError<unknown>,
+  TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -41,20 +39,19 @@ export const getUploadAttachmentsControllerHandleMutationOptions = <
     void,
     TContext
   >
-  axios?: AxiosRequestConfig
 }): UseMutationOptions<
   Awaited<ReturnType<typeof uploadAttachmentsControllerHandle>>,
   TError,
   void,
   TContext
 > => {
-  const { mutation: mutationOptions, axios: axiosOptions } = options ?? {}
+  const { mutation: mutationOptions } = options ?? {}
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof uploadAttachmentsControllerHandle>>,
     void
   > = () => {
-    return uploadAttachmentsControllerHandle(axiosOptions)
+    return uploadAttachmentsControllerHandle()
   }
 
   return { mutationFn, ...mutationOptions }
@@ -64,13 +61,13 @@ export type UploadAttachmentsControllerHandleMutationResult = NonNullable<
   Awaited<ReturnType<typeof uploadAttachmentsControllerHandle>>
 >
 
-export type UploadAttachmentsControllerHandleMutationError = AxiosError<unknown>
+export type UploadAttachmentsControllerHandleMutationError = unknown
 
 /**
  * @summary Upload attachments
  */
 export const useUploadAttachmentsControllerHandle = <
-  TError = AxiosError<unknown>,
+  TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -79,7 +76,6 @@ export const useUploadAttachmentsControllerHandle = <
     void,
     TContext
   >
-  axios?: AxiosRequestConfig
 }): UseMutationResult<
   Awaited<ReturnType<typeof uploadAttachmentsControllerHandle>>,
   TError,

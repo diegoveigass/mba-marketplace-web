@@ -18,8 +18,7 @@ import type {
   UseQueryOptions,
   UseQueryResult,
 } from '@tanstack/react-query'
-import * as axios from 'axios'
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
+import { customInstance } from '../../lib/axios-instance'
 import type {
   ChangeProductStatusResponse,
   CreateProductBody,
@@ -37,26 +36,25 @@ import type {
  */
 export const listAllSellerProductsControllerHandle = (
   params?: ListAllSellerProductsControllerHandleParams,
-  options?: AxiosRequestConfig
-): Promise<AxiosResponse<ListAllSellerProductsResponse>> => {
-  return axios.default.get(`http://localhost:3333/products/me`, {
-    ...options,
-    params: { ...params, ...options?.params },
+  signal?: AbortSignal
+) => {
+  return customInstance<ListAllSellerProductsResponse>({
+    url: `/products/me`,
+    method: 'GET',
+    params,
+    signal,
   })
 }
 
 export const getListAllSellerProductsControllerHandleQueryKey = (
   params?: ListAllSellerProductsControllerHandleParams
 ) => {
-  return [
-    `http://localhost:3333/products/me`,
-    ...(params ? [params] : []),
-  ] as const
+  return [`/products/me`, ...(params ? [params] : [])] as const
 }
 
 export const getListAllSellerProductsControllerHandleQueryOptions = <
   TData = Awaited<ReturnType<typeof listAllSellerProductsControllerHandle>>,
-  TError = AxiosError<void>,
+  TError = void,
 >(
   params?: ListAllSellerProductsControllerHandleParams,
   options?: {
@@ -67,10 +65,9 @@ export const getListAllSellerProductsControllerHandleQueryOptions = <
         TData
       >
     >
-    axios?: AxiosRequestConfig
   }
 ) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {}
+  const { query: queryOptions } = options ?? {}
 
   const queryKey =
     queryOptions?.queryKey ??
@@ -78,8 +75,7 @@ export const getListAllSellerProductsControllerHandleQueryOptions = <
 
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof listAllSellerProductsControllerHandle>>
-  > = ({ signal }) =>
-    listAllSellerProductsControllerHandle(params, { signal, ...axiosOptions })
+  > = ({ signal }) => listAllSellerProductsControllerHandle(params, signal)
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof listAllSellerProductsControllerHandle>>,
@@ -91,11 +87,11 @@ export const getListAllSellerProductsControllerHandleQueryOptions = <
 export type ListAllSellerProductsControllerHandleQueryResult = NonNullable<
   Awaited<ReturnType<typeof listAllSellerProductsControllerHandle>>
 >
-export type ListAllSellerProductsControllerHandleQueryError = AxiosError<void>
+export type ListAllSellerProductsControllerHandleQueryError = undefined
 
 export function useListAllSellerProductsControllerHandle<
   TData = Awaited<ReturnType<typeof listAllSellerProductsControllerHandle>>,
-  TError = AxiosError<void>,
+  TError = void,
 >(
   params: undefined | ListAllSellerProductsControllerHandleParams,
   options: {
@@ -114,12 +110,11 @@ export function useListAllSellerProductsControllerHandle<
         >,
         'initialData'
       >
-    axios?: AxiosRequestConfig
   }
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey }
 export function useListAllSellerProductsControllerHandle<
   TData = Awaited<ReturnType<typeof listAllSellerProductsControllerHandle>>,
-  TError = AxiosError<void>,
+  TError = void,
 >(
   params?: ListAllSellerProductsControllerHandleParams,
   options?: {
@@ -138,12 +133,11 @@ export function useListAllSellerProductsControllerHandle<
         >,
         'initialData'
       >
-    axios?: AxiosRequestConfig
   }
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey }
 export function useListAllSellerProductsControllerHandle<
   TData = Awaited<ReturnType<typeof listAllSellerProductsControllerHandle>>,
-  TError = AxiosError<void>,
+  TError = void,
 >(
   params?: ListAllSellerProductsControllerHandleParams,
   options?: {
@@ -154,7 +148,6 @@ export function useListAllSellerProductsControllerHandle<
         TData
       >
     >
-    axios?: AxiosRequestConfig
   }
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey }
 /**
@@ -163,7 +156,7 @@ export function useListAllSellerProductsControllerHandle<
 
 export function useListAllSellerProductsControllerHandle<
   TData = Awaited<ReturnType<typeof listAllSellerProductsControllerHandle>>,
-  TError = AxiosError<void>,
+  TError = void,
 >(
   params?: ListAllSellerProductsControllerHandleParams,
   options?: {
@@ -174,7 +167,6 @@ export function useListAllSellerProductsControllerHandle<
         TData
       >
     >
-    axios?: AxiosRequestConfig
   }
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getListAllSellerProductsControllerHandleQueryOptions(
@@ -195,18 +187,18 @@ export function useListAllSellerProductsControllerHandle<
  * @summary Create a product to sell
  */
 export const sellProductControllerHandle = (
-  createProductBody: CreateProductBody,
-  options?: AxiosRequestConfig
-): Promise<AxiosResponse<CreateProductResponse>> => {
-  return axios.default.post(
-    `http://localhost:3333/products`,
-    createProductBody,
-    options
-  )
+  createProductBody: CreateProductBody
+) => {
+  return customInstance<CreateProductResponse>({
+    url: `/products`,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    data: createProductBody,
+  })
 }
 
 export const getSellProductControllerHandleMutationOptions = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -215,14 +207,13 @@ export const getSellProductControllerHandleMutationOptions = <
     { data: CreateProductBody },
     TContext
   >
-  axios?: AxiosRequestConfig
 }): UseMutationOptions<
   Awaited<ReturnType<typeof sellProductControllerHandle>>,
   TError,
   { data: CreateProductBody },
   TContext
 > => {
-  const { mutation: mutationOptions, axios: axiosOptions } = options ?? {}
+  const { mutation: mutationOptions } = options ?? {}
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof sellProductControllerHandle>>,
@@ -230,7 +221,7 @@ export const getSellProductControllerHandleMutationOptions = <
   > = props => {
     const { data } = props ?? {}
 
-    return sellProductControllerHandle(data, axiosOptions)
+    return sellProductControllerHandle(data)
   }
 
   return { mutationFn, ...mutationOptions }
@@ -240,13 +231,13 @@ export type SellProductControllerHandleMutationResult = NonNullable<
   Awaited<ReturnType<typeof sellProductControllerHandle>>
 >
 export type SellProductControllerHandleMutationBody = CreateProductBody
-export type SellProductControllerHandleMutationError = AxiosError<void>
+export type SellProductControllerHandleMutationError = undefined
 
 /**
  * @summary Create a product to sell
  */
 export const useSellProductControllerHandle = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -255,7 +246,6 @@ export const useSellProductControllerHandle = <
     { data: CreateProductBody },
     TContext
   >
-  axios?: AxiosRequestConfig
 }): UseMutationResult<
   Awaited<ReturnType<typeof sellProductControllerHandle>>,
   TError,
@@ -271,26 +261,25 @@ export const useSellProductControllerHandle = <
  */
 export const listAllProductsControllerHandle = (
   params?: ListAllProductsControllerHandleParams,
-  options?: AxiosRequestConfig
-): Promise<AxiosResponse<ListAllProductsResponse>> => {
-  return axios.default.get(`http://localhost:3333/products`, {
-    ...options,
-    params: { ...params, ...options?.params },
+  signal?: AbortSignal
+) => {
+  return customInstance<ListAllProductsResponse>({
+    url: `/products`,
+    method: 'GET',
+    params,
+    signal,
   })
 }
 
 export const getListAllProductsControllerHandleQueryKey = (
   params?: ListAllProductsControllerHandleParams
 ) => {
-  return [
-    `http://localhost:3333/products`,
-    ...(params ? [params] : []),
-  ] as const
+  return [`/products`, ...(params ? [params] : [])] as const
 }
 
 export const getListAllProductsControllerHandleQueryOptions = <
   TData = Awaited<ReturnType<typeof listAllProductsControllerHandle>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params?: ListAllProductsControllerHandleParams,
   options?: {
@@ -301,18 +290,16 @@ export const getListAllProductsControllerHandleQueryOptions = <
         TData
       >
     >
-    axios?: AxiosRequestConfig
   }
 ) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {}
+  const { query: queryOptions } = options ?? {}
 
   const queryKey =
     queryOptions?.queryKey ?? getListAllProductsControllerHandleQueryKey(params)
 
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof listAllProductsControllerHandle>>
-  > = ({ signal }) =>
-    listAllProductsControllerHandle(params, { signal, ...axiosOptions })
+  > = ({ signal }) => listAllProductsControllerHandle(params, signal)
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof listAllProductsControllerHandle>>,
@@ -324,11 +311,11 @@ export const getListAllProductsControllerHandleQueryOptions = <
 export type ListAllProductsControllerHandleQueryResult = NonNullable<
   Awaited<ReturnType<typeof listAllProductsControllerHandle>>
 >
-export type ListAllProductsControllerHandleQueryError = AxiosError<unknown>
+export type ListAllProductsControllerHandleQueryError = unknown
 
 export function useListAllProductsControllerHandle<
   TData = Awaited<ReturnType<typeof listAllProductsControllerHandle>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: undefined | ListAllProductsControllerHandleParams,
   options: {
@@ -347,12 +334,11 @@ export function useListAllProductsControllerHandle<
         >,
         'initialData'
       >
-    axios?: AxiosRequestConfig
   }
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey }
 export function useListAllProductsControllerHandle<
   TData = Awaited<ReturnType<typeof listAllProductsControllerHandle>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params?: ListAllProductsControllerHandleParams,
   options?: {
@@ -371,12 +357,11 @@ export function useListAllProductsControllerHandle<
         >,
         'initialData'
       >
-    axios?: AxiosRequestConfig
   }
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey }
 export function useListAllProductsControllerHandle<
   TData = Awaited<ReturnType<typeof listAllProductsControllerHandle>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params?: ListAllProductsControllerHandleParams,
   options?: {
@@ -387,7 +372,6 @@ export function useListAllProductsControllerHandle<
         TData
       >
     >
-    axios?: AxiosRequestConfig
   }
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey }
 /**
@@ -396,7 +380,7 @@ export function useListAllProductsControllerHandle<
 
 export function useListAllProductsControllerHandle<
   TData = Awaited<ReturnType<typeof listAllProductsControllerHandle>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params?: ListAllProductsControllerHandleParams,
   options?: {
@@ -407,7 +391,6 @@ export function useListAllProductsControllerHandle<
         TData
       >
     >
-    axios?: AxiosRequestConfig
   }
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getListAllProductsControllerHandleQueryOptions(
@@ -429,18 +412,22 @@ export function useListAllProductsControllerHandle<
  */
 export const getProductControllerHandle = (
   id: unknown,
-  options?: AxiosRequestConfig
-): Promise<AxiosResponse<GetProductResponse>> => {
-  return axios.default.get(`http://localhost:3333/products/${id}`, options)
+  signal?: AbortSignal
+) => {
+  return customInstance<GetProductResponse>({
+    url: `/products/${id}`,
+    method: 'GET',
+    signal,
+  })
 }
 
 export const getGetProductControllerHandleQueryKey = (id: unknown) => {
-  return [`http://localhost:3333/products/${id}`] as const
+  return [`/products/${id}`] as const
 }
 
 export const getGetProductControllerHandleQueryOptions = <
   TData = Awaited<ReturnType<typeof getProductControllerHandle>>,
-  TError = AxiosError<void>,
+  TError = void,
 >(
   id: unknown,
   options?: {
@@ -451,18 +438,16 @@ export const getGetProductControllerHandleQueryOptions = <
         TData
       >
     >
-    axios?: AxiosRequestConfig
   }
 ) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {}
+  const { query: queryOptions } = options ?? {}
 
   const queryKey =
     queryOptions?.queryKey ?? getGetProductControllerHandleQueryKey(id)
 
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof getProductControllerHandle>>
-  > = ({ signal }) =>
-    getProductControllerHandle(id, { signal, ...axiosOptions })
+  > = ({ signal }) => getProductControllerHandle(id, signal)
 
   return {
     queryKey,
@@ -479,11 +464,11 @@ export const getGetProductControllerHandleQueryOptions = <
 export type GetProductControllerHandleQueryResult = NonNullable<
   Awaited<ReturnType<typeof getProductControllerHandle>>
 >
-export type GetProductControllerHandleQueryError = AxiosError<void>
+export type GetProductControllerHandleQueryError = undefined
 
 export function useGetProductControllerHandle<
   TData = Awaited<ReturnType<typeof getProductControllerHandle>>,
-  TError = AxiosError<void>,
+  TError = void,
 >(
   id: unknown,
   options: {
@@ -502,12 +487,11 @@ export function useGetProductControllerHandle<
         >,
         'initialData'
       >
-    axios?: AxiosRequestConfig
   }
 ): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey }
 export function useGetProductControllerHandle<
   TData = Awaited<ReturnType<typeof getProductControllerHandle>>,
-  TError = AxiosError<void>,
+  TError = void,
 >(
   id: unknown,
   options?: {
@@ -526,12 +510,11 @@ export function useGetProductControllerHandle<
         >,
         'initialData'
       >
-    axios?: AxiosRequestConfig
   }
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey }
 export function useGetProductControllerHandle<
   TData = Awaited<ReturnType<typeof getProductControllerHandle>>,
-  TError = AxiosError<void>,
+  TError = void,
 >(
   id: unknown,
   options?: {
@@ -542,7 +525,6 @@ export function useGetProductControllerHandle<
         TData
       >
     >
-    axios?: AxiosRequestConfig
   }
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey }
 /**
@@ -551,7 +533,7 @@ export function useGetProductControllerHandle<
 
 export function useGetProductControllerHandle<
   TData = Awaited<ReturnType<typeof getProductControllerHandle>>,
-  TError = AxiosError<void>,
+  TError = void,
 >(
   id: unknown,
   options?: {
@@ -562,7 +544,6 @@ export function useGetProductControllerHandle<
         TData
       >
     >
-    axios?: AxiosRequestConfig
   }
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetProductControllerHandleQueryOptions(id, options)
@@ -581,18 +562,18 @@ export function useGetProductControllerHandle<
  */
 export const editProductControllerHandle = (
   id: unknown,
-  createProductRequestBody: CreateProductRequestBody,
-  options?: AxiosRequestConfig
-): Promise<AxiosResponse<CreateProductResponse>> => {
-  return axios.default.put(
-    `http://localhost:3333/products/${id}`,
-    createProductRequestBody,
-    options
-  )
+  createProductRequestBody: CreateProductRequestBody
+) => {
+  return customInstance<CreateProductResponse>({
+    url: `/products/${id}`,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    data: createProductRequestBody,
+  })
 }
 
 export const getEditProductControllerHandleMutationOptions = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -601,14 +582,13 @@ export const getEditProductControllerHandleMutationOptions = <
     { id: unknown; data: CreateProductRequestBody },
     TContext
   >
-  axios?: AxiosRequestConfig
 }): UseMutationOptions<
   Awaited<ReturnType<typeof editProductControllerHandle>>,
   TError,
   { id: unknown; data: CreateProductRequestBody },
   TContext
 > => {
-  const { mutation: mutationOptions, axios: axiosOptions } = options ?? {}
+  const { mutation: mutationOptions } = options ?? {}
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof editProductControllerHandle>>,
@@ -616,7 +596,7 @@ export const getEditProductControllerHandleMutationOptions = <
   > = props => {
     const { id, data } = props ?? {}
 
-    return editProductControllerHandle(id, data, axiosOptions)
+    return editProductControllerHandle(id, data)
   }
 
   return { mutationFn, ...mutationOptions }
@@ -626,13 +606,13 @@ export type EditProductControllerHandleMutationResult = NonNullable<
   Awaited<ReturnType<typeof editProductControllerHandle>>
 >
 export type EditProductControllerHandleMutationBody = CreateProductRequestBody
-export type EditProductControllerHandleMutationError = AxiosError<void>
+export type EditProductControllerHandleMutationError = undefined
 
 /**
  * @summary Edit a product
  */
 export const useEditProductControllerHandle = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -641,7 +621,6 @@ export const useEditProductControllerHandle = <
     { id: unknown; data: CreateProductRequestBody },
     TContext
   >
-  axios?: AxiosRequestConfig
 }): UseMutationResult<
   Awaited<ReturnType<typeof editProductControllerHandle>>,
   TError,
@@ -657,18 +636,16 @@ export const useEditProductControllerHandle = <
  */
 export const changeProductStatusControllerHandle = (
   id: unknown,
-  status: 'available' | 'cancelled' | 'sold',
-  options?: AxiosRequestConfig
-): Promise<AxiosResponse<ChangeProductStatusResponse>> => {
-  return axios.default.patch(
-    `http://localhost:3333/products/${id}/${status}`,
-    undefined,
-    options
-  )
+  status: 'available' | 'cancelled' | 'sold'
+) => {
+  return customInstance<ChangeProductStatusResponse>({
+    url: `/products/${id}/${status}`,
+    method: 'PATCH',
+  })
 }
 
 export const getChangeProductStatusControllerHandleMutationOptions = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -677,14 +654,13 @@ export const getChangeProductStatusControllerHandleMutationOptions = <
     { id: unknown; status: 'available' | 'cancelled' | 'sold' },
     TContext
   >
-  axios?: AxiosRequestConfig
 }): UseMutationOptions<
   Awaited<ReturnType<typeof changeProductStatusControllerHandle>>,
   TError,
   { id: unknown; status: 'available' | 'cancelled' | 'sold' },
   TContext
 > => {
-  const { mutation: mutationOptions, axios: axiosOptions } = options ?? {}
+  const { mutation: mutationOptions } = options ?? {}
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof changeProductStatusControllerHandle>>,
@@ -692,7 +668,7 @@ export const getChangeProductStatusControllerHandleMutationOptions = <
   > = props => {
     const { id, status } = props ?? {}
 
-    return changeProductStatusControllerHandle(id, status, axiosOptions)
+    return changeProductStatusControllerHandle(id, status)
   }
 
   return { mutationFn, ...mutationOptions }
@@ -702,13 +678,13 @@ export type ChangeProductStatusControllerHandleMutationResult = NonNullable<
   Awaited<ReturnType<typeof changeProductStatusControllerHandle>>
 >
 
-export type ChangeProductStatusControllerHandleMutationError = AxiosError<void>
+export type ChangeProductStatusControllerHandleMutationError = undefined
 
 /**
  * @summary Change the product status
  */
 export const useChangeProductStatusControllerHandle = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -717,7 +693,6 @@ export const useChangeProductStatusControllerHandle = <
     { id: unknown; status: 'available' | 'cancelled' | 'sold' },
     TContext
   >
-  axios?: AxiosRequestConfig
 }): UseMutationResult<
   Awaited<ReturnType<typeof changeProductStatusControllerHandle>>,
   TError,

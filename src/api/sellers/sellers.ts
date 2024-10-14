@@ -18,8 +18,7 @@ import type {
   UseQueryOptions,
   UseQueryResult,
 } from '@tanstack/react-query'
-import * as axios from 'axios'
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
+import { customInstance } from '../../lib/axios-instance'
 import type {
   CreateSellerBody,
   CreateSellerResponse,
@@ -30,18 +29,18 @@ import type {
  * @summary Create a new seller
  */
 export const registerSellerControllerHandle = (
-  createSellerBody: CreateSellerBody,
-  options?: AxiosRequestConfig
-): Promise<AxiosResponse<CreateSellerResponse>> => {
-  return axios.default.post(
-    `http://localhost:3333/sellers`,
-    createSellerBody,
-    options
-  )
+  createSellerBody: CreateSellerBody
+) => {
+  return customInstance<CreateSellerResponse>({
+    url: `/sellers`,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    data: createSellerBody,
+  })
 }
 
 export const getRegisterSellerControllerHandleMutationOptions = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -50,14 +49,13 @@ export const getRegisterSellerControllerHandleMutationOptions = <
     { data: CreateSellerBody },
     TContext
   >
-  axios?: AxiosRequestConfig
 }): UseMutationOptions<
   Awaited<ReturnType<typeof registerSellerControllerHandle>>,
   TError,
   { data: CreateSellerBody },
   TContext
 > => {
-  const { mutation: mutationOptions, axios: axiosOptions } = options ?? {}
+  const { mutation: mutationOptions } = options ?? {}
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof registerSellerControllerHandle>>,
@@ -65,7 +63,7 @@ export const getRegisterSellerControllerHandleMutationOptions = <
   > = props => {
     const { data } = props ?? {}
 
-    return registerSellerControllerHandle(data, axiosOptions)
+    return registerSellerControllerHandle(data)
   }
 
   return { mutationFn, ...mutationOptions }
@@ -75,13 +73,13 @@ export type RegisterSellerControllerHandleMutationResult = NonNullable<
   Awaited<ReturnType<typeof registerSellerControllerHandle>>
 >
 export type RegisterSellerControllerHandleMutationBody = CreateSellerBody
-export type RegisterSellerControllerHandleMutationError = AxiosError<void>
+export type RegisterSellerControllerHandleMutationError = undefined
 
 /**
  * @summary Create a new seller
  */
 export const useRegisterSellerControllerHandle = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -90,7 +88,6 @@ export const useRegisterSellerControllerHandle = <
     { data: CreateSellerBody },
     TContext
   >
-  axios?: AxiosRequestConfig
 }): UseMutationResult<
   Awaited<ReturnType<typeof registerSellerControllerHandle>>,
   TError,
@@ -105,19 +102,21 @@ export const useRegisterSellerControllerHandle = <
 /**
  * @summary Get the seller profile
  */
-export const sellerProfileControllerHandle = (
-  options?: AxiosRequestConfig
-): Promise<AxiosResponse<SellerProfileResponse>> => {
-  return axios.default.get(`http://localhost:3333/sellers/me`, options)
+export const sellerProfileControllerHandle = (signal?: AbortSignal) => {
+  return customInstance<SellerProfileResponse>({
+    url: `/sellers/me`,
+    method: 'GET',
+    signal,
+  })
 }
 
 export const getSellerProfileControllerHandleQueryKey = () => {
-  return [`http://localhost:3333/sellers/me`] as const
+  return [`/sellers/me`] as const
 }
 
 export const getSellerProfileControllerHandleQueryOptions = <
   TData = Awaited<ReturnType<typeof sellerProfileControllerHandle>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseQueryOptions<
@@ -126,16 +125,15 @@ export const getSellerProfileControllerHandleQueryOptions = <
       TData
     >
   >
-  axios?: AxiosRequestConfig
 }) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {}
+  const { query: queryOptions } = options ?? {}
 
   const queryKey =
     queryOptions?.queryKey ?? getSellerProfileControllerHandleQueryKey()
 
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof sellerProfileControllerHandle>>
-  > = ({ signal }) => sellerProfileControllerHandle({ signal, ...axiosOptions })
+  > = ({ signal }) => sellerProfileControllerHandle(signal)
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof sellerProfileControllerHandle>>,
@@ -147,11 +145,11 @@ export const getSellerProfileControllerHandleQueryOptions = <
 export type SellerProfileControllerHandleQueryResult = NonNullable<
   Awaited<ReturnType<typeof sellerProfileControllerHandle>>
 >
-export type SellerProfileControllerHandleQueryError = AxiosError<unknown>
+export type SellerProfileControllerHandleQueryError = unknown
 
 export function useSellerProfileControllerHandle<
   TData = Awaited<ReturnType<typeof sellerProfileControllerHandle>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options: {
   query: Partial<
     UseQueryOptions<
@@ -168,11 +166,10 @@ export function useSellerProfileControllerHandle<
       >,
       'initialData'
     >
-  axios?: AxiosRequestConfig
 }): DefinedUseQueryResult<TData, TError> & { queryKey: QueryKey }
 export function useSellerProfileControllerHandle<
   TData = Awaited<ReturnType<typeof sellerProfileControllerHandle>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseQueryOptions<
@@ -189,11 +186,10 @@ export function useSellerProfileControllerHandle<
       >,
       'initialData'
     >
-  axios?: AxiosRequestConfig
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey }
 export function useSellerProfileControllerHandle<
   TData = Awaited<ReturnType<typeof sellerProfileControllerHandle>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseQueryOptions<
@@ -202,7 +198,6 @@ export function useSellerProfileControllerHandle<
       TData
     >
   >
-  axios?: AxiosRequestConfig
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey }
 /**
  * @summary Get the seller profile
@@ -210,7 +205,7 @@ export function useSellerProfileControllerHandle<
 
 export function useSellerProfileControllerHandle<
   TData = Awaited<ReturnType<typeof sellerProfileControllerHandle>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseQueryOptions<
@@ -219,7 +214,6 @@ export function useSellerProfileControllerHandle<
       TData
     >
   >
-  axios?: AxiosRequestConfig
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getSellerProfileControllerHandleQueryOptions(options)
 

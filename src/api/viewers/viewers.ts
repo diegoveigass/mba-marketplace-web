@@ -11,26 +11,21 @@ import type {
   UseMutationOptions,
   UseMutationResult,
 } from '@tanstack/react-query'
-import * as axios from 'axios'
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
+import { customInstance } from '../../lib/axios-instance'
 import type { RegisterViewResponse } from '.././model'
 
 /**
  * @summary Register a view on a product
  */
-export const registerViewControllerHandle = (
-  id: unknown,
-  options?: AxiosRequestConfig
-): Promise<AxiosResponse<RegisterViewResponse>> => {
-  return axios.default.post(
-    `http://localhost:3333/products/${id}/views`,
-    undefined,
-    options
-  )
+export const registerViewControllerHandle = (id: unknown) => {
+  return customInstance<RegisterViewResponse>({
+    url: `/products/${id}/views`,
+    method: 'POST',
+  })
 }
 
 export const getRegisterViewControllerHandleMutationOptions = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -39,14 +34,13 @@ export const getRegisterViewControllerHandleMutationOptions = <
     { id: unknown },
     TContext
   >
-  axios?: AxiosRequestConfig
 }): UseMutationOptions<
   Awaited<ReturnType<typeof registerViewControllerHandle>>,
   TError,
   { id: unknown },
   TContext
 > => {
-  const { mutation: mutationOptions, axios: axiosOptions } = options ?? {}
+  const { mutation: mutationOptions } = options ?? {}
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof registerViewControllerHandle>>,
@@ -54,7 +48,7 @@ export const getRegisterViewControllerHandleMutationOptions = <
   > = props => {
     const { id } = props ?? {}
 
-    return registerViewControllerHandle(id, axiosOptions)
+    return registerViewControllerHandle(id)
   }
 
   return { mutationFn, ...mutationOptions }
@@ -64,13 +58,13 @@ export type RegisterViewControllerHandleMutationResult = NonNullable<
   Awaited<ReturnType<typeof registerViewControllerHandle>>
 >
 
-export type RegisterViewControllerHandleMutationError = AxiosError<void>
+export type RegisterViewControllerHandleMutationError = undefined
 
 /**
  * @summary Register a view on a product
  */
 export const useRegisterViewControllerHandle = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -79,7 +73,6 @@ export const useRegisterViewControllerHandle = <
     { id: unknown },
     TContext
   >
-  axios?: AxiosRequestConfig
 }): UseMutationResult<
   Awaited<ReturnType<typeof registerViewControllerHandle>>,
   TError,

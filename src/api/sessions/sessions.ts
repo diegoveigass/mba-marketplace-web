@@ -11,8 +11,7 @@ import type {
   UseMutationOptions,
   UseMutationResult,
 } from '@tanstack/react-query'
-import * as axios from 'axios'
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
+import { customInstance } from '../../lib/axios-instance'
 import type {
   AuthenticateSellerBody,
   AuthenticateSellerResponse,
@@ -22,18 +21,18 @@ import type {
  * @summary Get the seller access token
  */
 export const authenticateSellerControllerHandle = (
-  authenticateSellerBody: AuthenticateSellerBody,
-  options?: AxiosRequestConfig
-): Promise<AxiosResponse<AuthenticateSellerResponse>> => {
-  return axios.default.post(
-    `http://localhost:3333/sellers/sessions`,
-    authenticateSellerBody,
-    options
-  )
+  authenticateSellerBody: AuthenticateSellerBody
+) => {
+  return customInstance<AuthenticateSellerResponse>({
+    url: `/sellers/sessions`,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    data: authenticateSellerBody,
+  })
 }
 
 export const getAuthenticateSellerControllerHandleMutationOptions = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -42,14 +41,13 @@ export const getAuthenticateSellerControllerHandleMutationOptions = <
     { data: AuthenticateSellerBody },
     TContext
   >
-  axios?: AxiosRequestConfig
 }): UseMutationOptions<
   Awaited<ReturnType<typeof authenticateSellerControllerHandle>>,
   TError,
   { data: AuthenticateSellerBody },
   TContext
 > => {
-  const { mutation: mutationOptions, axios: axiosOptions } = options ?? {}
+  const { mutation: mutationOptions } = options ?? {}
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof authenticateSellerControllerHandle>>,
@@ -57,7 +55,7 @@ export const getAuthenticateSellerControllerHandleMutationOptions = <
   > = props => {
     const { data } = props ?? {}
 
-    return authenticateSellerControllerHandle(data, axiosOptions)
+    return authenticateSellerControllerHandle(data)
   }
 
   return { mutationFn, ...mutationOptions }
@@ -68,13 +66,13 @@ export type AuthenticateSellerControllerHandleMutationResult = NonNullable<
 >
 export type AuthenticateSellerControllerHandleMutationBody =
   AuthenticateSellerBody
-export type AuthenticateSellerControllerHandleMutationError = AxiosError<void>
+export type AuthenticateSellerControllerHandleMutationError = undefined
 
 /**
  * @summary Get the seller access token
  */
 export const useAuthenticateSellerControllerHandle = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -83,7 +81,6 @@ export const useAuthenticateSellerControllerHandle = <
     { data: AuthenticateSellerBody },
     TContext
   >
-  axios?: AxiosRequestConfig
 }): UseMutationResult<
   Awaited<ReturnType<typeof authenticateSellerControllerHandle>>,
   TError,
@@ -98,18 +95,12 @@ export const useAuthenticateSellerControllerHandle = <
 /**
  * @summary Sign out
  */
-export const signOutControllerHandle = (
-  options?: AxiosRequestConfig
-): Promise<AxiosResponse<void>> => {
-  return axios.default.post(
-    `http://localhost:3333/sign-out`,
-    undefined,
-    options
-  )
+export const signOutControllerHandle = () => {
+  return customInstance<void>({ url: `/sign-out`, method: 'POST' })
 }
 
 export const getSignOutControllerHandleMutationOptions = <
-  TError = AxiosError<unknown>,
+  TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -118,20 +109,19 @@ export const getSignOutControllerHandleMutationOptions = <
     void,
     TContext
   >
-  axios?: AxiosRequestConfig
 }): UseMutationOptions<
   Awaited<ReturnType<typeof signOutControllerHandle>>,
   TError,
   void,
   TContext
 > => {
-  const { mutation: mutationOptions, axios: axiosOptions } = options ?? {}
+  const { mutation: mutationOptions } = options ?? {}
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof signOutControllerHandle>>,
     void
   > = () => {
-    return signOutControllerHandle(axiosOptions)
+    return signOutControllerHandle()
   }
 
   return { mutationFn, ...mutationOptions }
@@ -141,13 +131,13 @@ export type SignOutControllerHandleMutationResult = NonNullable<
   Awaited<ReturnType<typeof signOutControllerHandle>>
 >
 
-export type SignOutControllerHandleMutationError = AxiosError<unknown>
+export type SignOutControllerHandleMutationError = unknown
 
 /**
  * @summary Sign out
  */
 export const useSignOutControllerHandle = <
-  TError = AxiosError<unknown>,
+  TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -156,7 +146,6 @@ export const useSignOutControllerHandle = <
     void,
     TContext
   >
-  axios?: AxiosRequestConfig
 }): UseMutationResult<
   Awaited<ReturnType<typeof signOutControllerHandle>>,
   TError,
