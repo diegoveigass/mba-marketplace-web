@@ -11,9 +11,11 @@ import logoImg from '../assets/logo.svg'
 import { useSignOutControllerHandle } from '../api/sessions/sessions'
 import axios, { type AxiosError } from 'axios'
 import { toast } from 'sonner'
+import { useSellerProfileControllerHandle } from '../api/sellers/sellers'
 
 export function Header() {
   const navigate = useNavigate()
+  const { data } = useSellerProfileControllerHandle()
   const { mutateAsync: signOut } = useSignOutControllerHandle()
 
   async function handleSignOut() {
@@ -69,19 +71,29 @@ export function Header() {
           <DropdownMenu.Trigger asChild>
             <button type="button" className="size-12 outline-none">
               <img
-                src="https://github.com/diegoveigass.png"
-                className="rounded-lg"
+                src={
+                  data?.seller.avatar?.url
+                    ? data?.seller.avatar?.url
+                    : 'https://plus.unsplash.com/premium_photo-1689551670902-19b441a6afde?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                }
+                className="size-12 rounded-lg object-cover"
                 alt=""
               />
             </button>
           </DropdownMenu.Trigger>
           <DropdownMenu.Portal>
             <DropdownMenu.Content
-              className="min-w-[120px] rounded-md bg-shape p-1"
+              className="min-w-[120px] rounded-md bg-shape p-1 space-y-2"
               sideOffset={5}
             >
               <DropdownMenu.Item
-                className="text-sm flex items-center justify-between px-4 py-2 h-[25px] text-red-900 select-none rounded-md outline-none data-[highlighted]:bg-red-400"
+                disabled
+                className="text-md font-dm-sans px-4 py-2 text-gray-300 select-none disabled:opacity-80"
+              >
+                {data?.seller.name}
+              </DropdownMenu.Item>
+              <DropdownMenu.Item
+                className="cursor-pointer text-md font-dm-sans font-semibold flex items-center justify-between px-4 py-2 text-red-500 select-none rounded-md outline-none data-[highlighted]:bg-red-400 hover:bg-red-700/20"
                 onClick={handleSignOut}
               >
                 Logout
