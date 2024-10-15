@@ -15,22 +15,23 @@ import { useUploadAttachmentsControllerHandle } from '../../api/attachments/atta
 import { useRegisterSellerControllerHandle } from '../../api/sellers/sellers'
 import { toast } from 'sonner'
 import axios, { type AxiosError } from 'axios'
-
-const ACCEPTED_IMAGE_TYPES = ['image/png']
+import { handleSeePassword } from '../../utils/input-utils'
 
 const signUpFormSchema = z
   .object({
     name: z.string(),
     phone: z.string(),
-    email: z.string().email(),
-    password: z.string(),
-    passwordConfirmation: z.string(),
+    email: z.string().email('O valor não é um input do tipo e-mail'),
+    password: z.string().min(6, 'Deve conter pelo menos 6 caracteres'),
+    passwordConfirmation: z
+      .string()
+      .min(6, 'Deve conter pelo menos 6 caracteres'),
     file: z.custom<FileList>().refine(files => {
       return Array.from(files ?? []).length !== 0
     }, 'A imagem do produto é obrigatória.'),
   })
   .refine(data => data.password === data.passwordConfirmation, {
-    message: "Passwords don't match",
+    message: 'As senhas não batem, por favor, verifique!',
     path: ['passwordConfirmation'],
   })
 
@@ -213,6 +214,11 @@ export function SignUp() {
                 />
               </div>
             </div>
+            {errors.email?.message && (
+              <span className="mt-2 block text-red-700">
+                {errors.email.message}
+              </span>
+            )}
           </div>
 
           <div className="group">
@@ -233,9 +239,17 @@ export function SignUp() {
                   className="w-full outline-none py-4"
                   placeholder="Senha de acesso"
                 />
-                <ViewIcon className="ml-auto text-gray-200" />
+                <ViewIcon
+                  className="ml-auto text-gray-200 cursor-pointer"
+                  onClick={() => handleSeePassword('password')}
+                />
               </div>
             </div>
+            {errors.password?.message && (
+              <span className="mt-2 block text-red-700">
+                {errors.password.message}
+              </span>
+            )}
           </div>
 
           <div className="group">
@@ -256,7 +270,10 @@ export function SignUp() {
                   className="w-full outline-none py-4"
                   placeholder="Confirme a senha"
                 />
-                <ViewIcon className="ml-auto text-gray-200" />
+                <ViewIcon
+                  className="ml-auto text-gray-200 cursor-pointer"
+                  onClick={() => handleSeePassword('passwordConfirmation')}
+                />
               </div>
             </div>
             {errors.passwordConfirmation?.message && (

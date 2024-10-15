@@ -11,10 +11,14 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useAuthenticateSellerControllerHandle } from '../../api/sessions/sessions'
 import axios, { type AxiosError } from 'axios'
 import { toast } from 'sonner'
+import { handleSeePassword } from '../../utils/input-utils'
 
 const signInFormSchema = z.object({
-  email: z.string().email(),
-  password: z.string(),
+  email: z
+    .string()
+    .email('O valor não é um input do tipo e-mail')
+    .min(1, 'Campo obrigatório'),
+  password: z.string().min(1, 'Campo obrigatório'),
 })
 
 type SignInForm = z.infer<typeof signInFormSchema>
@@ -23,7 +27,11 @@ export function SignIn() {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
 
-  const { register, handleSubmit } = useForm<SignInForm>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignInForm>({
     resolver: zodResolver(signInFormSchema),
     defaultValues: {
       email: searchParams.get('email') ?? '',
@@ -86,9 +94,13 @@ export function SignIn() {
                   className="w-full outline-none py-4"
                   placeholder="Seu e-mail cadastrado"
                 />
-                <ViewIcon className="ml-auto text-gray-200" />
               </div>
             </div>
+            {errors.email?.message && (
+              <span className="mt-2 block text-red-700">
+                {errors.email.message}
+              </span>
+            )}
           </div>
           <div className="group">
             <label
@@ -107,8 +119,16 @@ export function SignIn() {
                   className="w-full outline-none py-4"
                   placeholder="Sua senha de acesso"
                 />
-                <ViewIcon className="ml-auto text-gray-200" />
+                <ViewIcon
+                  className="ml-auto text-gray-200 cursor-pointer"
+                  onClick={() => handleSeePassword('password')}
+                />
               </div>
+              {errors.password?.message && (
+                <span className="mt-2 block text-red-700">
+                  {errors.password.message}
+                </span>
+              )}
             </div>
           </div>
         </div>
