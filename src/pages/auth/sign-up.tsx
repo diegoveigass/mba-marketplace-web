@@ -4,6 +4,7 @@ import {
   ArrowRight02Icon,
   ImageUploadIcon,
   Mail02Icon,
+  SmartPhone01Icon,
   UserIcon,
   ViewIcon,
 } from 'hugeicons-react'
@@ -120,7 +121,7 @@ export function SignUp() {
             control={control}
             render={({ field: { onChange } }) => (
               <>
-                <div className="h-32 w-32 bg-orange-base/20 flex flex-col items-center justify-center rounded-xl relative cursor-pointer">
+                <div className="h-32 w-32 bg-orange-base/20 flex flex-col items-center justify-center rounded-xl relative cursor-pointer hover:opacity-60 transition-opacity">
                   <input
                     type="file"
                     name="file"
@@ -175,11 +176,11 @@ export function SignUp() {
               className="uppercase text-gray-300 text-xs group-focus-within:text-orange-dark"
               htmlFor="phone"
             >
-              Nome
+              Telefone
             </label>
             <div className="border-b border-zinc-300 flex items-center">
               <div className="flex flex-1 items-center gap-2">
-                <UserIcon className="text-gray-200 group-focus-within:text-orange-dark" />
+                <SmartPhone01Icon className="text-gray-200 group-focus-within:text-orange-dark" />
                 <input
                   type="tel"
                   id="phone"

@@ -10,6 +10,7 @@ export default {
       colors: {
         background: '#FBF4F4',
         shape: '#F5EAEA',
+        success: '#28A745',
         'blue-light': '#D7EFF9',
         'blue-base': '#5EC5FD',
         'blue-dark': '#009CF0',

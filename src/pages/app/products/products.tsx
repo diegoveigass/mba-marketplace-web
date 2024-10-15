@@ -1,7 +1,9 @@
+import { useListAllSellerProductsControllerHandle } from '../../../api/products/products'
 import { ProductCard } from './product-card'
 import { ProductFilter } from './product-filter'
 
 export function Products() {
+  const { data } = useListAllSellerProductsControllerHandle()
   return (
     <div className="pt-16 px-40 h-full flex gap-10 flex-col">
       <div>
@@ -17,13 +19,9 @@ export function Products() {
         <ProductFilter />
 
         <div className="col-span-2 grid grid-cols-2 gap-4 pb-2 overflow-x-scroll max-h-[675px]">
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
+          {data?.products.map(product => {
+            return <ProductCard key={product.id} product={product} />
+          })}
         </div>
       </div>
     </div>

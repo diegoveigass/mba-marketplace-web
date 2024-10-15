@@ -13,6 +13,7 @@ export type ListAllSellerProductsResponseProductsItem = {
   attachments: ListAllSellerProductsResponseProductsItemAttachmentsItem[]
   category: ListAllSellerProductsResponseProductsItemCategory
   description: string
+  status: 'available' | 'sold' | 'cancelled'
   id: string
   owner: ListAllSellerProductsResponseProductsItemOwner
   priceInCents: number
