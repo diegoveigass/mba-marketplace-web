@@ -1,9 +1,22 @@
+import type { ListAllSellerProductsControllerHandleStatus } from '../../../api/model'
+import { useSearchParams } from 'react-router-dom'
 import { useListAllSellerProductsControllerHandle } from '../../../api/products/products'
 import { ProductCard } from './product-card'
 import { ProductFilter } from './product-filter'
 
 export function Products() {
-  const { data } = useListAllSellerProductsControllerHandle()
+  const [searchParams] = useSearchParams()
+
+  const search = searchParams.get('search')
+  const status = searchParams.get(
+    'status'
+  ) as ListAllSellerProductsControllerHandleStatus
+
+  const { data } = useListAllSellerProductsControllerHandle({
+    search,
+    status,
+  })
+
   return (
     <div className="pt-16 px-40 h-full flex gap-10 flex-col">
       <div>
