@@ -8,5 +8,5 @@
 
 export type ViewsPerDayResponseViewsPerDayItem = {
   amount: number
-  date: unknown
+  date: string
 }

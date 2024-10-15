@@ -9,26 +9,27 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
+import { useCountSellerViewsPerDayControllerHandle } from '../../../api/metrics/metrics'
+import 'dayjs/locale/pt-BR'
+import dayjs from 'dayjs'
 
-const data = [
-  {
-    name: '8 de julho',
-    visitors: 41,
-    date: 8,
-  },
-  {
-    name: '9 de julho',
-    visitors: 141,
-    date: 9,
-  },
-  {
-    name: '10 de julho',
-    visitors: 341,
-    date: 10,
-  },
-]
+dayjs.locale('pt-BR')
 
 export function Chart() {
+  const { data } = useCountSellerViewsPerDayControllerHandle()
+
+  const formattedData = data?.viewsPerDay.map(value => {
+    return {
+      ...value,
+      date: dayjs(value.date).format('DD/MM'),
+    }
+  })
+
+  const firstDate = dayjs(data?.viewsPerDay[0].date).format('DD [de] MMMM')
+  const lastDate = dayjs(
+    data?.viewsPerDay[data?.viewsPerDay.length - 1].date
+  ).format('DD [de] MMMM')
+
   return (
     <div className="bg-white rounded-2xl col-span-4 p-6 space-y-4">
       <div className="flex items-center justify-between">
@@ -36,7 +37,7 @@ export function Chart() {
         <div className="flex items-center justify-center gap-2">
           <Calendar01Icon className="size-4 text-blue-dark" />
           <p className="uppercase text-xs leading-tight">
-            26 de junho - 26 de julho
+            {firstDate} - {lastDate}
           </p>
         </div>
       </div>
@@ -45,7 +46,7 @@ export function Chart() {
           <LineChart
             width={500}
             height={300}
-            data={data}
+            data={formattedData}
             margin={{
               top: 5,
               right: 30,
@@ -60,9 +61,10 @@ export function Chart() {
             <Legend />
             <Line
               type="monotone"
-              dataKey="visitors"
+              dataKey="amount"
               stroke="#8884d8"
               activeDot={{ r: 8 }}
+              name="Visitantes"
             />
           </LineChart>
         </ResponsiveContainer>
