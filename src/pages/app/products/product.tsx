@@ -9,6 +9,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import * as Select from '@radix-ui/react-select'
 import {
   useChangeProductStatusControllerHandle,
+  useEditProductControllerHandle,
   useGetProductControllerHandle,
   useSellProductControllerHandle,
 } from '../../../api/products/products'
@@ -76,6 +77,8 @@ export function Product() {
       },
     },
   })
+
+  const { mutateAsync: editProduct } = useEditProductControllerHandle()
 
   const [preview, setPreview] = useState<string | null>(null)
 
@@ -182,20 +185,36 @@ export function Product() {
 
   async function handleUpdateProduct(data: ProductSchema) {
     console.log(data)
-    // let fileUploadedResponse: UploadAttachmentsResponse | null = null
-    // if (
-    //   productData?.product.attachments &&
-    //   productData.product.attachments.length > 0 &&
-    //   data.file
-    // ) {
-    //   const formData = new FormData()
+    const formData = new FormData()
 
-    //   formData.append('files', data.file[0])
+    formData.append('files', data.file[0])
 
-    //   try {
-    //     fileUploadedResponse = await uploadAttachments(formData)
-    //   } catch (err) {}
-    // }
+    try {
+      const response = await uploadAttachments(formData)
+
+      await editProduct({
+        id: productData?.product.id,
+        data: {
+          title: data.title,
+          categoryId: data.categoryId,
+          description: data.description,
+          priceInCents: data.priceInCents * 100,
+          attachmentsIds: [response.attachments[0].id],
+        },
+      })
+
+      toast.success('Produto editado com sucesso!')
+      navigate('/products')
+    } catch (err) {
+      const errors = err as Error | AxiosError
+
+      if (axios.isAxiosError(errors)) {
+        toast.error(errors.response?.data.message)
+        return
+      }
+
+      throw new Error(errors.message)
+    }
   }
 
   if (isLoadingProduct || isLoadingCategories) {
@@ -339,6 +358,8 @@ export function Product() {
                         id="price"
                         className="w-full outline-none py-4"
                         placeholder="0,00"
+                        min="1"
+                        step="any"
                         {...register('priceInCents', { valueAsNumber: true })}
                       />
                     </div>

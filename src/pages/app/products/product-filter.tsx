@@ -23,13 +23,14 @@ export function ProductFilter() {
   const search = searchParams.get('search')
   const status = searchParams.get('status')
 
-  const { handleSubmit, register, control } = useForm<ProductFiltersSchema>({
-    resolver: zodResolver(productFiltersSchema),
-    defaultValues: {
-      search: search ?? '',
-      status: status ?? '',
-    },
-  })
+  const { handleSubmit, register, control, reset } =
+    useForm<ProductFiltersSchema>({
+      resolver: zodResolver(productFiltersSchema),
+      defaultValues: {
+        search: search ?? '',
+        status: status ?? '',
+      },
+    })
 
   function handleFilter({ status, search }: ProductFiltersSchema) {
     setSearchParams(state => {
@@ -46,6 +47,20 @@ export function ProductFilter() {
       }
 
       return state
+    })
+  }
+
+  function handleClearFilters() {
+    setSearchParams(state => {
+      state.delete('search')
+      state.delete('status')
+
+      return state
+    })
+
+    reset({
+      search: '',
+      status: '',
     })
   }
 
@@ -151,12 +166,21 @@ export function ProductFilter() {
         </div>
       </div>
 
-      <button
-        type="submit"
-        className="px-5 py-4 bg-orange-base w-full rounded-lg text-white flex items-center justify-center hover:bg-orange-dark transition-colors"
-      >
-        Aplicar filtro
-      </button>
+      <div className="flex items-center gap-4">
+        <button
+          type="submit"
+          className="px-5 py-4 bg-orange-base w-full rounded-lg text-white flex items-center justify-center hover:bg-orange-dark transition-colors"
+        >
+          Aplicar filtro
+        </button>
+        <button
+          type="button"
+          onClick={handleClearFilters}
+          className="px-5 py-4 border border-orange-base w-full rounded-lg text-orange-base flex items-center justify-center hover:border-orange-dark transition-colors"
+        >
+          Limpar filtros
+        </button>
+      </div>
     </form>
   )
 }
