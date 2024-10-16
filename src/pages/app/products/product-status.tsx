@@ -3,9 +3,9 @@ interface ProdcutStatusProps {
 }
 
 const STATUS = {
-  available: { name: 'Disponível', color: 'bg-blue-dark' },
+  available: { name: 'Anunciado', color: 'bg-blue-dark' },
   sold: { name: 'Vendido', color: 'bg-success' },
-  cancelled: { name: 'Vendido', color: 'bg-gray-400' },
+  cancelled: { name: 'Desativado', color: 'bg-gray-400' },
 }
 
 export function ProductStatus({ status }: ProdcutStatusProps) {

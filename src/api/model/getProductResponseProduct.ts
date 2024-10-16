@@ -8,11 +8,13 @@
 import type { GetProductResponseProductAttachmentsItem } from './getProductResponseProductAttachmentsItem'
 import type { GetProductResponseProductCategory } from './getProductResponseProductCategory'
 import type { GetProductResponseProductOwner } from './getProductResponseProductOwner'
+import type { ListAllSellerProductsControllerHandleStatus } from './listAllSellerProductsControllerHandleStatus'
 
 export type GetProductResponseProduct = {
   attachments: GetProductResponseProductAttachmentsItem[]
   category: GetProductResponseProductCategory
   description: string
+  status: ListAllSellerProductsControllerHandleStatus
   id: string
   owner: GetProductResponseProductOwner
   priceInCents: number

@@ -29,7 +29,7 @@ const signUpFormSchema = z
       .min(6, 'Deve conter pelo menos 6 caracteres'),
     file: z.custom<FileList>().refine(files => {
       return Array.from(files ?? []).length !== 0
-    }, 'A imagem do produto é obrigatória.'),
+    }, 'A imagem do perfil é obrigatória.'),
   })
   .refine(data => data.password === data.passwordConfirmation, {
     message: 'As senhas não batem, por favor, verifique!',
@@ -54,8 +54,6 @@ export function SignUp() {
   } = useForm<SignUpForm>({
     resolver: zodResolver(signUpFormSchema),
   })
-
-  console.log(errors)
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files![0]
