@@ -43,6 +43,7 @@ export function SignUp() {
 
   const { mutateAsync: uploadAttachments } =
     useUploadAttachmentsControllerHandle()
+
   const { mutateAsync: registerSeller } = useRegisterSellerControllerHandle()
 
   const [preview, setPreview] = useState<string | null>(null)

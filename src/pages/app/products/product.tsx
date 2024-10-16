@@ -10,6 +10,7 @@ import * as Select from '@radix-ui/react-select'
 import {
   useChangeProductStatusControllerHandle,
   useGetProductControllerHandle,
+  useSellProductControllerHandle,
 } from '../../../api/products/products'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -17,10 +18,15 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useListAllCategoriesControllerHandle } from '../../../api/categories/categories'
 import { ProductStatus } from './product-status'
 import { type ChangeEvent, useEffect, useState } from 'react'
-import type { ListAllSellerProductsControllerHandleStatus } from '../../../api/model'
+import type {
+  ListAllSellerProductsControllerHandleStatus,
+  UploadAttachmentsResponse,
+} from '../../../api/model'
 import { toast } from 'sonner'
 import axios, { type AxiosError } from 'axios'
 import { useQueryClient } from '@tanstack/react-query'
+import { useUploadAttachmentsControllerHandle } from '../../../api/attachments/attachments'
+import { createFileListFromUrl } from '../../../utils/file-utils'
 
 const productSchema = z.object({
   title: z.string(),
@@ -44,7 +50,7 @@ export function Product() {
   const { data: categoriesData, isLoading: isLoadingCategories } =
     useListAllCategoriesControllerHandle()
 
-  const { data, isLoading: isLoadingProduct } =
+  const { data: productData, isLoading: isLoadingProduct } =
     useGetProductControllerHandle(id)
 
   const { mutateAsync: changeProductStatus } =
@@ -52,15 +58,34 @@ export function Product() {
       mutation: {
         onSuccess() {
           queryClient.invalidateQueries({
-            queryKey: [`/products/${data?.product.id}`],
+            queryKey: [`/products/${productData?.product.id}`],
           })
         },
       },
     })
 
+  const { mutateAsync: uploadAttachments } =
+    useUploadAttachmentsControllerHandle()
+
+  const { mutateAsync: createProduct } = useSellProductControllerHandle({
+    mutation: {
+      onSuccess() {
+        queryClient.invalidateQueries({
+          queryKey: ['/products/me'],
+        })
+      },
+    },
+  })
+
   const [preview, setPreview] = useState<string | null>(null)
 
-  const { handleSubmit, register, control, reset } = useForm<ProductSchema>({
+  const {
+    handleSubmit,
+    register,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm<ProductSchema>({
     resolver: zodResolver(productSchema),
     defaultValues: {
       title: '',
@@ -71,16 +96,23 @@ export function Product() {
   })
 
   useEffect(() => {
-    if (data?.product) {
-      reset({
-        title: data.product.title,
-        description: data.product.description,
-        categoryId: data.product.category.id,
-        priceInCents: data.product.priceInCents / 100,
-      })
-      setPreview(data.product.attachments[0]?.url || null)
+    async function fillProductDataInForm() {
+      if (productData?.product) {
+        reset({
+          title: productData.product.title,
+          description: productData.product.description,
+          categoryId: productData.product.category.id,
+          priceInCents: productData.product.priceInCents / 100,
+          file: await createFileListFromUrl(
+            productData.product.attachments[0].url
+          ),
+        })
+        setPreview(productData.product.attachments[0]?.url || null)
+      }
     }
-  }, [data, reset])
+
+    fillProductDataInForm()
+  }, [productData, reset])
 
   function handleNavigateToProducts() {
     navigate('/products')
@@ -99,7 +131,7 @@ export function Product() {
   ) {
     try {
       await changeProductStatus({
-        id: data?.product.id,
+        id: productData?.product.id,
         status,
       })
 
@@ -116,8 +148,54 @@ export function Product() {
     }
   }
 
-  async function handleCreateOrUpdateProduct(data: ProductSchema) {
+  async function handleCreateProduct(data: ProductSchema) {
+    const formData = new FormData()
+
+    formData.append('files', data.file[0])
+
+    try {
+      const response = await uploadAttachments(formData)
+
+      await createProduct({
+        data: {
+          title: data.title,
+          categoryId: data.categoryId,
+          description: data.description,
+          priceInCents: data.priceInCents * 100,
+          attachmentsIds: [response.attachments[0].id],
+        },
+      })
+
+      toast.success('Produto criado com sucesso!')
+      navigate('/products')
+    } catch (err) {
+      const errors = err as Error | AxiosError
+
+      if (axios.isAxiosError(errors)) {
+        toast.error(errors.response?.data.message)
+        return
+      }
+
+      throw new Error(errors.message)
+    }
+  }
+
+  async function handleUpdateProduct(data: ProductSchema) {
     console.log(data)
+    // let fileUploadedResponse: UploadAttachmentsResponse | null = null
+    // if (
+    //   productData?.product.attachments &&
+    //   productData.product.attachments.length > 0 &&
+    //   data.file
+    // ) {
+    //   const formData = new FormData()
+
+    //   formData.append('files', data.file[0])
+
+    //   try {
+    //     fileUploadedResponse = await uploadAttachments(formData)
+    //   } catch (err) {}
+    // }
   }
 
   if (isLoadingProduct || isLoadingCategories) {
@@ -128,7 +206,7 @@ export function Product() {
     <div className="pt-16 px-40 h-full flex gap-10 flex-col">
       <div className="flex items-start justify-between">
         <div>
-          {data?.product && (
+          {productData?.product && (
             <button
               type="button"
               onClick={handleNavigateToProducts}
@@ -141,13 +219,13 @@ export function Product() {
             </button>
           )}
           <h1 className="font-bold text-3xl text-gray-500 font-dm-sans">
-            {data?.product ? 'Editar produto' : 'Novo produto'}
+            {productData?.product ? 'Editar produto' : 'Novo produto'}
           </h1>
           <span className="text-gray-300">
             Cadastre um produto para venda no marketplace
           </span>
         </div>
-        {data?.product && (
+        {productData?.product && (
           <div className="self-end flex items-center justify-center gap-4">
             <button
               type="button"
@@ -175,26 +253,33 @@ export function Product() {
           control={control}
           render={({ field: { onChange } }) => {
             return (
-              <div className="h-96 bg-shape flex items-center justify-center flex-col rounded-3xl gap-4 relative">
-                <input
-                  type="file"
-                  name="file"
-                  id="file"
-                  accept="image/png"
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  onChange={event => {
-                    handleFileChange(event)
-                    onChange(event.target.files)
-                  }}
-                />
-                {preview ? (
-                  <img
-                    src={preview}
-                    alt="Preview"
-                    className="w-full h-full object-cover rounded-xl"
+              <div className="flex flex-col">
+                <div className="h-96 bg-shape flex items-center justify-center flex-col rounded-3xl gap-4 relative">
+                  <input
+                    type="file"
+                    name="file"
+                    id="file"
+                    accept="image/png"
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    onChange={event => {
+                      handleFileChange(event)
+                      onChange(event.target.files)
+                    }}
                   />
-                ) : (
-                  <ImageUploadIcon className="size-8 text-orange-base" />
+                  {preview ? (
+                    <img
+                      src={preview}
+                      alt="Preview"
+                      className="w-full h-full object-cover rounded-xl"
+                    />
+                  ) : (
+                    <ImageUploadIcon className="size-8 text-orange-base" />
+                  )}
+                </div>
+                {errors.file?.message && (
+                  <span className="mt-2 block text-red-700">
+                    {errors.file.message}
+                  </span>
                 )}
               </div>
             )
@@ -205,10 +290,16 @@ export function Product() {
             <h2 className="font-dm-sans font-bold text-lg text-gray-300">
               Dados do produto
             </h2>
-            {data?.product && <ProductStatus status={data?.product.status} />}
+            {productData?.product && (
+              <ProductStatus status={productData?.product.status} />
+            )}
           </div>
           <form
-            onSubmit={handleSubmit(handleCreateOrUpdateProduct)}
+            onSubmit={
+              !productData
+                ? handleSubmit(handleCreateProduct)
+                : handleSubmit(handleUpdateProduct)
+            }
             className="flex flex-col gap-10"
           >
             <div className="flex flex-col gap-5">
@@ -244,11 +335,11 @@ export function Product() {
                       <span>R$</span>
 
                       <input
-                        type="text"
+                        type="number"
                         id="price"
                         className="w-full outline-none py-4"
                         placeholder="0,00"
-                        {...register('priceInCents')}
+                        {...register('priceInCents', { valueAsNumber: true })}
                       />
                     </div>
                   </div>
@@ -348,7 +439,7 @@ export function Product() {
                 type="submit"
                 className="px-5 py-4 h-14  bg-orange-base rounded-lg w-full text-white flex justify-center items-center gap-2 font-semibold hover:bg-orange-dark transition-colors"
               >
-                {data?.product ? 'Salvar e editar' : 'Salvar e publicar'}
+                {productData?.product ? 'Salvar e editar' : 'Salvar e publicar'}
               </button>
             </div>
           </form>
